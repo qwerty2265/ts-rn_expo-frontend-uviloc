@@ -1,6 +1,5 @@
-const Layout = () => {
-    return (
-    )
-}
+import { Redirect } from "expo-router";
 
-export default Layout;
+export default function Index() {
+    return <Redirect href='/map' />
+}
