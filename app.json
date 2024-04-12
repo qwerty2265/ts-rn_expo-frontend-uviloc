@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "rn_expo-frontend-geosens",
-    "slug": "rn_expo-frontend-geosens",
+    "name": "rn_expo-frontend-geosense",
+    "slug": "rn_expo-frontend-geosense",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
