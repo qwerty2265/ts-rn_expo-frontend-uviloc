@@ -1,3 +1,3 @@
-import { COLORS, FONT } from "./theme"
+import { COLORS, FONT, Z_INDEX } from "./theme"
 
-export { COLORS, FONT };
+export { COLORS, FONT, Z_INDEX };

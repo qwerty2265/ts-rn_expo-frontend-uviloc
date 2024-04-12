@@ -23,4 +23,22 @@ const FONT = {
     bold: 'SMBold'
 }
 
-export { COLORS, FONT };
+const Z_INDEX = {
+    background: 0,
+
+    content_1: 10,
+    content_2: 20,
+    content_3: 30,
+    content_4: 40,
+    contant_5: 50,
+
+    wrapper: 100,
+
+    modal_1: 200,
+    modal_2: 300,
+    
+    extra_1: 1000,
+    extra_2: 2000
+}
+
+export { COLORS, FONT, Z_INDEX };
