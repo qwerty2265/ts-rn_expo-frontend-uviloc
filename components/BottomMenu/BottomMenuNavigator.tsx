@@ -15,7 +15,6 @@ const BottomMenuNavigator: React.FC<BottomMenuNavigatorProps> = ({ children }) =
         screenOptions={({ route }) => ({
             headerStyle: {
                 height: 50,
-                paddingHorizontal: 10,
                 borderBottomWidth: 0.5,
                 borderColor: COLORS.primary,
                 backgroundColor: COLORS.background,
