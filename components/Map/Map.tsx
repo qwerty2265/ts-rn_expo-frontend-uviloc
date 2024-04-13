@@ -3,6 +3,7 @@ import styles from "./map.style";
 import { useEffect, useState } from "react";
 import * as Location from 'expo-location';
 import { Text } from "react-native";
+import { MAP_THEME } from "../../constants";
 
 interface MapRegionState {
     latitude: number,
@@ -95,7 +96,7 @@ const Map = () => {
     return (
         <MapView style={styles.mapContainer}
             region={mapRegion}
-            userInterfaceStyle='dark'
+            customMapStyle={MAP_THEME}
             >
         <Marker coordinate={{ latitude: mapRegion.latitude, longitude: mapRegion.longitude }} title="You"/>
         </MapView>
