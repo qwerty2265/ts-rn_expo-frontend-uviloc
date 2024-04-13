@@ -13,7 +13,22 @@ const BottomMenuNavigator: React.FC<BottomMenuNavigatorProps> = ({ children }) =
     return (
         <Tab.Navigator 
         screenOptions={({ route }) => ({
-            headerShown: false,
+            headerStyle: {
+                height: 50,
+                paddingHorizontal: 10,
+                borderBottomWidth: 0.5,
+                borderColor: COLORS.primary,
+                backgroundColor: COLORS.background,
+                elevation: 0,
+            },
+            headerTitleStyle: {
+                height: 60,
+                padding: 0,
+                margin: 0,
+                fontFamily: FONT.bold,
+                color: COLORS.text,
+            },
+
             tabBarStyle: {
                 borderTopWidth: 0.5,
                 borderColor: COLORS.primary,
