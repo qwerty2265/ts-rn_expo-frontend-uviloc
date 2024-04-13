@@ -12,8 +12,8 @@ const styles = StyleSheet.create({
     },
     bottomMenuPage: {
         flex: 1,
-        backgroundColor: COLORS.background
-
+        backgroundColor: COLORS.background,
+        padding: 10,
     },
 })
 
