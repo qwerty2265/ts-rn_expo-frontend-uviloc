@@ -41,4 +41,13 @@ const Z_INDEX = {
     extra_2: 2000
 }
 
-export { COLORS, FONT, Z_INDEX };
+const SIZE = {
+    xSmall: 10,
+    small: 12,
+    medium: 16,
+    large: 20,
+    xLarge: 24,
+    xxLarge: 32,
+};
+
+export { COLORS, FONT, Z_INDEX, SIZE };
