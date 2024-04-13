@@ -1,3 +1,4 @@
-import { COLORS, FONT, Z_INDEX } from "./theme"
+import icons from './icons';
+import { COLORS, FONT, Z_INDEX } from "./theme";
 
-export { COLORS, FONT, Z_INDEX };
+export { icons, COLORS, FONT, Z_INDEX };
