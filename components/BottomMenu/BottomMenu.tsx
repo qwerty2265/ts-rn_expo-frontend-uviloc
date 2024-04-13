@@ -53,8 +53,3 @@ const BottomMenu = () => {
 }
 
 export default BottomMenu;
-
-
-const screenOptions = {
-    
-}
