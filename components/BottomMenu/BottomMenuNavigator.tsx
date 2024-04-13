@@ -28,6 +28,18 @@ const BottomMenuNavigator: React.FC<BottomMenuNavigatorProps> = ({ children }) =
                 fontFamily: FONT.bold,
                 color: COLORS.text,
             },
+            headerRight: () => (
+                <Pressable style={{ backgroundColor: 'transparent'}}>
+                    {({ pressed }) => (
+                        <icons.plus 
+                            style={{ marginRight: 15, marginBottom: 30, opacity: pressed ? 0.5 : 1 }}
+                            height={25} 
+                            width={25} 
+                            stroke={COLORS.secondary} 
+                        />
+                    )}                  
+                </Pressable>
+            ),
 
             tabBarStyle: {
                 borderTopWidth: 0.5,
