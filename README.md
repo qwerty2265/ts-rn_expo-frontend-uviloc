@@ -1,5 +1,10 @@
 # ts-rn_expo-template
 
+## npm
+```
+npm install
+```
+
 ## start
 ```
 npx expo start --web
