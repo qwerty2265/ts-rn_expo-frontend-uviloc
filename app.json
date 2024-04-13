@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "rn_expo-frontend-geosense",
-    "slug": "rn_expo-frontend-geosense",
+    "name": "rn_expo-frontend-uviloc",
+    "slug": "rn_expo-frontend-uviloc",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "scheme": "geosense",
+    "scheme": "uviloc",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -33,7 +33,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(Geosense) to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow $(Uviloc) to use your location."
         }
       ]
     ]
