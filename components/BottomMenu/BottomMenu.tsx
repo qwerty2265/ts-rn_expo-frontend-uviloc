@@ -3,21 +3,30 @@ import Devices from "./Devices";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./bottommenu.style";
 import BottomMenuNavigator from "./BottomMenuNavigator";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { Pressable } from "react-native";
 import { COLORS, icons } from "../../constants";
 import Profile from "./Profile";
 
+import { Link } from "expo-router";
+
 const Tab = createBottomTabNavigator();
 
+
+
 const BottomMenu = () => {
+    const navigation = useNavigation();
     return (
         <NavigationContainer independent={true}>
             <SafeAreaView style={styles.bottomMenu} >
                 <BottomMenuNavigator>
                     <Tab.Screen options={{
                         headerRight: () => (
-                            <Pressable style={{ backgroundColor: 'transparent'}}>
+                            <Pressable 
+                                style={{ backgroundColor: 'transparent'}}
+                                // @ts-expect-error
+                                onPress={() => navigation.navigate('qr-scanner')}
+                            >
                                 {({ pressed }) => (
                                     <icons.plus 
                                         style={{ marginRight: 15, marginBottom: 30, opacity: pressed ? 0.5 : 1 }}
@@ -27,6 +36,7 @@ const BottomMenu = () => {
                                     />
                                 )}                  
                             </Pressable>
+
                         ),
                     }}
                     name='Devices' 
