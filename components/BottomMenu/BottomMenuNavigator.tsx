@@ -18,6 +18,9 @@ const BottomMenuNavigator: React.FC<BottomMenuNavigatorProps> = ({ children }) =
                 borderBottomWidth: 0,
                 borderColor: COLORS.background,
                 backgroundColor: COLORS.background,
+                shadowOffset: {
+                    width: 0, height: 0 // for iOS
+                },
                 elevation: 0,
             },
             headerTitleStyle: {
