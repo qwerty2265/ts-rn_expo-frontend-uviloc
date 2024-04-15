@@ -13,6 +13,12 @@ function QrScanner() {
         requestPermission();
     }, [])
 
+    const handleBarcodeScanned = ({ data }: { data: string }) => {
+        if (data.startsWith("uviloc_tracker-") && data.length <= 33) {
+            setScannedResult(data);
+        }
+    };
+
     switch (permission?.granted) {
         case null:
             return <View style={{flex: 1, backgroundColor: COLORS.background}}/>
@@ -49,9 +55,7 @@ function QrScanner() {
                             barcodeTypes: ['qr', 'ean13'],
                         
                         }}
-                        onBarcodeScanned={({data}) => {
-                            setScannedResult(data);
-                        }}
+                        onBarcodeScanned={handleBarcodeScanned}
                     >
                     </CameraView>
                 </SafeAreaView>
