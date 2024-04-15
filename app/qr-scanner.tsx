@@ -1,6 +1,6 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomText from "../components/CustomText";
-import { COLORS } from "../constants";
+import { COLORS, Z_INDEX, icons } from "../constants";
 import { CameraView, useCameraPermissions } from 'expo-camera/next'
 import { useEffect, useState } from "react";
 import { View } from "react-native";
@@ -22,12 +22,32 @@ function QrScanner() {
             break;
         case true: 
             return (
-                <SafeAreaView style={{flex: 1, backgroundColor: COLORS.background}}>
+                <SafeAreaView style={{
+                    flex: 1, 
+                    zIndex: Z_INDEX.modal_1,
+                    backgroundColor: COLORS.background
+                }}>
+                    <CustomText>{scannedResult}</CustomText>
+                    <icons.qr 
+                        height={300} 
+                        width={300} 
+                        fill={COLORS.accent + '90'}
+                        style={{    
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: [{ translateX: -150 }, { translateY: -150 }],
+                            width: 300,
+                            height: 300,
+                            zIndex: Z_INDEX.extra_1,
+                        }}
+                    />
                     <CameraView 
                         style={{flex: 1}}
                         facing={'back'}
                         barcodeScannerSettings={{
                             barcodeTypes: ['qr', 'ean13'],
+                        
                         }}
                         onBarcodeScanned={({data}) => {
                             setScannedResult(data);
