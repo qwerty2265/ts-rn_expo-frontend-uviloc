@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { COLORS, FONT, icons } from "../../constants";
+import { COLORS, FONT, SIZE, icons } from "../../constants";
 import { Pressable } from "react-native";
 
 interface BottomMenuNavigatorProps {
@@ -15,8 +15,8 @@ const BottomMenuNavigator: React.FC<BottomMenuNavigatorProps> = ({ children }) =
         screenOptions={({ route }) => ({
             headerStyle: {
                 height: 50,
-                borderBottomWidth: 0.5,
-                borderColor: COLORS.primary,
+                borderBottomWidth: 0,
+                borderColor: COLORS.background,
                 backgroundColor: COLORS.background,
                 elevation: 0,
             },
@@ -25,20 +25,10 @@ const BottomMenuNavigator: React.FC<BottomMenuNavigatorProps> = ({ children }) =
                 padding: 0,
                 margin: 0,
                 fontFamily: FONT.bold,
+                fontSize: SIZE.large,
                 color: COLORS.text,
             },
-            headerRight: () => (
-                <Pressable style={{ backgroundColor: 'transparent'}}>
-                    {({ pressed }) => (
-                        <icons.plus 
-                            style={{ marginRight: 15, marginBottom: 30, opacity: pressed ? 0.5 : 1 }}
-                            height={25} 
-                            width={25} 
-                            stroke={COLORS.secondary} 
-                        />
-                    )}                  
-                </Pressable>
-            ),
+            headerTitleAlign: 'left',
 
             tabBarStyle: {
                 borderTopWidth: 0.5,
@@ -50,6 +40,7 @@ const BottomMenuNavigator: React.FC<BottomMenuNavigatorProps> = ({ children }) =
             tabBarLabelStyle: {
                 fontFamily: FONT.bold,
             },
+
             tabBarIcon: ({ focused, size }) => {
                 let iconComponent;
                 let tabColor = focused ? COLORS.accent : COLORS.text;
