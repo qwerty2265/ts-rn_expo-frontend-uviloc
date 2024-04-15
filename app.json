@@ -33,7 +33,13 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(Uviloc) to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow Uviloc to use your location."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Uviloc to access your camera"
         }
       ]
     ]
