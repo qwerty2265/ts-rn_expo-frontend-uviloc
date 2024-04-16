@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TextStyle } from 'react-native';
+import { View, StyleSheet, TextStyle, ViewStyle } from 'react-native';
 import CustomText from "./CustomText";
 import CustomTextInput from "./CustomTextInput";
 
@@ -9,6 +9,7 @@ interface LabeledTextInputProps {
     secureTextEntry?: boolean;
     onChangeText?: (text: string) => void;
     value?: string;
+    style?: ViewStyle;
     labelStyle?: TextStyle;
     textInputStyle?: TextStyle;
 }
@@ -19,11 +20,12 @@ const LabeledTextInput: React.FC<LabeledTextInputProps> = ({
     secureTextEntry = false,
     onChangeText = () => null,
     value,
+    style,
     labelStyle,
     textInputStyle
 }) => {
     return (
-        <View>
+        <View style={style}>
             <CustomText style={labelStyle}>{label}</CustomText>
             <CustomTextInput
                 secureTextEntry={secureTextEntry}
