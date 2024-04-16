@@ -1,8 +1,8 @@
-import { Text, TextStyle } from "react-native";
+import { Text, TextProps, TextStyle } from "react-native";
 import { COLORS, FONT } from "../constants";
 import { ReactNode } from "react";
 
-interface CustomTextProps {
+interface CustomTextProps extends TextProps{
     bold?: boolean;
     style?: TextStyle;
     size?: number; 
@@ -10,11 +10,14 @@ interface CustomTextProps {
     children: ReactNode;
 }
 
-const CustomText: React.FC<CustomTextProps> = ({ bold, style, size = 14, color = COLORS.text, children }) => {
+const CustomText: React.FC<CustomTextProps> = ({ bold, style, color = COLORS.text, children, ...props}) => {
     const fontFamily = bold ? FONT.bold : FONT.regular;
 
     return (
-        <Text style={[{ fontFamily, color }, style]}>
+        <Text 
+            style={[{ fontFamily, color }, style]} 
+            {...props}
+        >
             {children}
         </Text>
     );
