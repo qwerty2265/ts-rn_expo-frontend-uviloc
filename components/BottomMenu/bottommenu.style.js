@@ -13,8 +13,22 @@ const styles = StyleSheet.create({
     bottomMenuPage: {
         flex: 1,
         backgroundColor: COLORS.background,
-        padding: 10,
+        padding: 20,
     },
+    profileForm : {
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        width: '80%',
+        maxWidth: 300,
+    },
+    profileFormButton : {
+        marginTop: 15,
+        backgroundColor: COLORS.accent,
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        cursor: 'pointer'
+    }
 })
 
 export default styles;
