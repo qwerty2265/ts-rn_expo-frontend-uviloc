@@ -3,6 +3,7 @@ export interface UserData {
     name: string;
     phoneNumber: string;
     email: string;
+    accessToken: string;
 }
 
 export interface AuthContextType {
