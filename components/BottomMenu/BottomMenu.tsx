@@ -13,7 +13,6 @@ const Tab = createBottomTabNavigator();
 const BottomMenu = () => {
     const navigation = useNavigation();
     return (
-        <NavigationContainer independent={true}>
         <View style={styles.bottomMenu} >
             <BottomMenuNavigator>
                 <Tab.Screen options={{
@@ -39,8 +38,7 @@ const BottomMenu = () => {
                 component={Devices} />
                 <Tab.Screen name='Profile' component={Profile} />
             </BottomMenuNavigator>
-        </View>    
-        </NavigationContainer>
+        </View>
     )
 }
 
