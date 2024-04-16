@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import { SplashScreen } from "expo-router";
 import { COLORS } from "../constants";
 import { AuthContextProvider } from "../context/AuthContext";
+import { Provider } from "react-redux";
+import { store } from "../state/store";
 
 const Stack = createStackNavigator();
 
@@ -32,6 +34,7 @@ const Layout = () => {
 
     return (
         <AuthContextProvider>
+        <Provider store={store}>
         <NavigationContainer independent={true}>
             <Stack.Navigator
                 screenOptions={{
@@ -62,6 +65,7 @@ const Layout = () => {
                 />
             </Stack.Navigator>
         </NavigationContainer>
+        </Provider>
         </AuthContextProvider>
     )
 }
