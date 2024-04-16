@@ -9,6 +9,8 @@ import { COLORS } from "../constants";
 import { AuthContextProvider } from "../context/AuthContext";
 import { Provider } from "react-redux";
 import { store } from "../state/store";
+import Auth from "./auth";
+import PrivacyPolicy from "./privacy-policy";
 
 const Stack = createStackNavigator();
 
@@ -40,9 +42,30 @@ const Layout = () => {
                 screenOptions={{
                     headerShown: false
                 }}
-                initialRouteName='home'
+                initialRouteName='auth'
             >
-                <Stack.Screen name='home' options={{ headerShown: false}} component={Home}/>
+                <Stack.Screen name='home' options={{ headerShown: false}} component={Home} />
+                <Stack.Screen name='auth' options={{ headerShown: false}} component={Auth} />
+                <Stack.Screen 
+                    name='privacy-policy' 
+                    options={{
+                        headerShown: true,
+                        headerTitle: '',
+                        headerStyle: {
+                            backgroundColor: COLORS.background,
+                            shadowOffset: {
+                                width: 0, height: 0
+                            },
+                            elevation: 0,
+                            borderBottomWidth: 0.5,
+                            borderBottomColor: COLORS.secondary,
+                        },
+                        headerTintColor: COLORS.secondary,
+                        headerBackTitle: 'Back',
+                        presentation: 'modal' 
+                    }} 
+                    component={PrivacyPolicy} 
+                />
                 <Stack.Screen 
                     name='qr-scanner'
                     options={{

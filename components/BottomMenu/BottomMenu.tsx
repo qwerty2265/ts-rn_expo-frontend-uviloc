@@ -3,7 +3,7 @@ import Devices from "./Devices";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./bottommenu.style";
 import BottomMenuNavigator from "./BottomMenuNavigator";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { Pressable, View } from "react-native";
 import { COLORS, icons } from "../../constants";
 import Profile from "./Profile";
