@@ -19,8 +19,7 @@ const PrivacyPolicyLink = ({ navigation } : { navigation : NavigationProp<any> }
                 textDecorationLine: 'underline',
             }}
             onPress={() => {navigation.navigate('privacy-policy')}}
-            >
-            
+        >
             privacy policy
         </CustomText>
     )
@@ -33,13 +32,14 @@ function Auth({ navigation } : { navigation : NavigationProp<any>}) {
 
 	const handleLogin = async () => {
         try {
-            const response = await axios.post(`${apiUrl}/api/users/`, {
+            const response = await axios.post(`${apiUrl}/api/users/createorget`, {
                 "username": username,
 				"password": password,
             });
 
 			if (response.data.access_token) {
 				login(response.data.access_token);
+                navigation.navigate('home');
 			} 
 			else {
 				console.error('Login failed: No access token received');
@@ -106,7 +106,6 @@ function Auth({ navigation } : { navigation : NavigationProp<any>}) {
             </CustomText>
         </View>
         </SafeAreaView>
-        
     )
 }
 
