@@ -2,10 +2,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CustomText from "../components/CustomText";
 import { COLORS, Z_INDEX, icons } from "../constants";
 import { CameraView, useCameraPermissions } from 'expo-camera/next'
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
+import { NavigationProp } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 
-function QrScanner() {
+interface QrScannerProps {
+    navigation: NavigationProp<any>;
+}
+
+function QrScanner({ navigation } : QrScannerProps) {
     const [permission, requestPermission] = useCameraPermissions();
     const [scannedResult, setScannedResult] = useState<string | null>(null);
 
@@ -16,6 +22,8 @@ function QrScanner() {
     const handleBarcodeScanned = ({ data }: { data: string }) => {
         if (data.startsWith("uviloc_tracker-") && data.length <= 33) {
             setScannedResult(data);
+            // @ts-expect-error
+            navigation.navigate('home');
         }
     };
 
@@ -28,12 +36,11 @@ function QrScanner() {
             break;
         case true: 
             return (
-                <SafeAreaView style={{
+                <View style={{
                     flex: 1, 
                     zIndex: Z_INDEX.modal_1,
                     backgroundColor: COLORS.background
                 }}>
-                    <CustomText>{scannedResult}</CustomText>
                     <icons.qr 
                         height={300} 
                         width={300} 
@@ -58,7 +65,7 @@ function QrScanner() {
                         onBarcodeScanned={handleBarcodeScanned}
                     >
                     </CameraView>
-                </SafeAreaView>
+                </View>
             )
             break;
         default:
