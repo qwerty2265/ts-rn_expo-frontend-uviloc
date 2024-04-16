@@ -1,21 +1,41 @@
-import React, { ReactNode, createContext, useContext, useState } from 'react';
+import React, { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import { AuthContextType, UserData } from '../types/user';
+import { getData, removeData, storeData } from '../utils/storage';
 
 interface AuthContextProps {
     children: ReactNode
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
+const USER_DATA_KEY = 'access_token'
 
 export const AuthContextProvider : React.FC<AuthContextProps> = ({ children }) => {
     const [userData, setUserData] = useState<UserData | null>(null);
 
-    const login = (userData : UserData) => {
-        setUserData(userData);
-    };
+    useEffect(() => {
+        const loadUserData = async () => {
+            try {
+                const storedUserData = await getData(USER_DATA_KEY);
+                if (storedUserData) {
+                    setUserData(storedUserData as UserData);
+                }
+            } 
+            catch (error) {
+                console.error('Failed to load user data:', error);
+            }
+        };
 
-    const logout = () => {
+        loadUserData();
+    }, []);
+
+    const login = async (userData: UserData) => {
+        setUserData(userData);
+        await storeData({ key: USER_DATA_KEY, value: userData });
+      };
+
+    const logout = async () => {
         setUserData(null);
+        await removeData(USER_DATA_KEY);
     };
 
     return (
