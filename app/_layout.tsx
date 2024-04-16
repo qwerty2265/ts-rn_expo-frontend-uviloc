@@ -45,9 +45,15 @@ const Layout = () => {
                         headerTitle: '',
                         headerStyle: {
                             backgroundColor: COLORS.background,
+                            shadowOffset: {
+                                width: 0, height: 0
+                            },
                             elevation: 0,
+                            borderBottomWidth: 0.5,
+                            borderBottomColor: COLORS.secondary,
                         },
                         headerTintColor: COLORS.secondary,
+                        headerBackTitle: 'Back',
                         presentation: 'modal' 
                     }} 
                     component={QrScanner}
