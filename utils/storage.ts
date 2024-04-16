@@ -41,4 +41,4 @@ const removeData = async (key: string): Promise<void> => {
     }
 };
 
-export { storeData, getData };
+export { storeData, getData, removeData };
