@@ -1,11 +1,11 @@
-import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../constants";
+import { View } from "react-native";
 
 function PrivacyPolicy() {
     return (
-        <SafeAreaView style={{flex: 1, backgroundColor: COLORS.background}}>
+        <View style={{flex: 1, backgroundColor: COLORS.background}}>
 
-        </SafeAreaView>
+        </View>
     )
 }
 
