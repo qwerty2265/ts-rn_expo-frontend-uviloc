@@ -4,27 +4,32 @@ import CustomText from "../CustomText";
 import { COLORS } from "../../constants";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import LabeledTextInput from "../LabeledTextInput";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 const Profile = () => {
 	const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+	const { login } = useAuth();
 
 	const handleLogin = async () => {
-		console.log(1);
         try {
-			console.log(2);
             const response = await axios.post(`${apiUrl}/api/users/`, {
                 "username": username,
 				"password": password,
             });
-            console.log('Login successful:', response);
-            
-        } catch (error) {
-			console.log(3);
+
+			if (response.data.access_token) {
+				login(response.data.access_token);
+			} 
+			else {
+				console.error('Login failed: No access token received');
+			}            
+        } 
+		catch (error) {
             if (axios.isAxiosError(error)) {
                 console.error('Axios error:', error.response?.data);
             } else {
