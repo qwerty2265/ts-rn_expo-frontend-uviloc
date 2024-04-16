@@ -1,9 +1,9 @@
 import React from 'react';
-import { TextInput, TextInputProps, StyleSheet } from "react-native";
+import { TextInput, TextInputProps, StyleSheet, TextStyle } from "react-native";
 import { COLORS, FONT } from "../constants";
 
 interface CustomTextInputProps extends TextInputProps {
-
+    style?: TextStyle
 }
 
 const CustomTextInput: React.FC<CustomTextInputProps> = ({style, ...props}) => {
