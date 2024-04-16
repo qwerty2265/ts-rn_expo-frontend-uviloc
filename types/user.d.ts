@@ -6,7 +6,7 @@ export interface UserData {
 }
 
 export interface AuthContextType {
-    user: UserData | null;
+    userData: UserData | null;
     login: (userData: UserData) => void;
     logout: () => void;
 }
