@@ -15,11 +15,11 @@ const BottomMenuNavigator: React.FC<BottomMenuNavigatorProps> = ({ children }) =
         screenOptions={({ route }) => ({
             headerStyle: {
                 height: 50,
-                borderBottomWidth: 0,
-                borderColor: COLORS.background,
+                borderBottomWidth: 0.5,
+                borderBottomColor: COLORS.background,
                 backgroundColor: COLORS.background,
                 shadowOffset: {
-                    width: 0, height: 0 // for iOS
+                    width: 0, height: 0
                 },
                 elevation: 0,
             },
@@ -35,8 +35,9 @@ const BottomMenuNavigator: React.FC<BottomMenuNavigatorProps> = ({ children }) =
 
             tabBarStyle: {
                 borderTopWidth: 0.5,
-                borderColor: COLORS.primary,
+                borderTopColor: COLORS.secondary,
                 backgroundColor: COLORS.background,
+                shadowColor: COLORS.background
             },
             tabBarInactiveTintColor: COLORS.text,
             tabBarActiveTintColor: COLORS.accent,
