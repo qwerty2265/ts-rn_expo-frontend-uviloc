@@ -6,6 +6,7 @@ import QrScanner from "./qr-scanner";
 import { useEffect } from "react";
 import { SplashScreen } from "expo-router";
 import { COLORS } from "../constants";
+import { AuthContextProvider } from "../context/AuthContext";
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,7 @@ const Layout = () => {
     }
 
     return (
+        <AuthContextProvider>
         <NavigationContainer independent={true}>
             <Stack.Navigator
                 screenOptions={{
@@ -60,6 +62,7 @@ const Layout = () => {
                 />
             </Stack.Navigator>
         </NavigationContainer>
+        </AuthContextProvider>
     )
 }
 
