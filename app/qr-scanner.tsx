@@ -6,6 +6,11 @@ import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
+import { getData } from "../utils/storage";
+import { UserData } from "../types/user";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../state/store";
+import { addTracker } from "../slices/trackerSlice";
 
 interface QrScannerProps {
     navigation: NavigationProp<any>;
@@ -13,16 +18,37 @@ interface QrScannerProps {
 
 function QrScanner({ navigation } : QrScannerProps) {
     const [permission, requestPermission] = useCameraPermissions();
+    const [username, setUsername] = useState<string | null>(null);
     const [scannedResult, setScannedResult] = useState<string | null>(null);
 
+    const dispatch = useDispatch<AppDispatch>();
+
     useEffect(() => {
+        const fetchUsername = async () => {
+            const user_data = await getData('user_data'); // Тип unknown
+            const typedUserData = user_data as UserData | undefined; // Приведение к типу UserData или undefined
+
+            if (typedUserData && typedUserData.username) {
+                setUsername(typedUserData.username);
+            } 
+            else {
+                console.error("Invalid or missing user data:", typedUserData);
+            }
+        };
+
+        fetchUsername();
         requestPermission();
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        if (scannedResult === null || username === null) return
+        dispatch(addTracker({ username, tracker_token: scannedResult }));
+
+    }, [scannedResult])
 
     const handleBarcodeScanned = ({ data }: { data: string }) => {
         if (data.startsWith("uviloc_tracker-") && data.length <= 33) {
             setScannedResult(data);
-            // @ts-expect-error
             navigation.navigate('home');
         }
     };
