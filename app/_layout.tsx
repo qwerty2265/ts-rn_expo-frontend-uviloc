@@ -3,7 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts } from "expo-font";
 import Home from "./home";
 import QrScanner from "./qr-scanner";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SplashScreen } from "expo-router";
 import { COLORS } from "../constants";
 import { AuthContextProvider } from "../context/AuthContext";
@@ -11,14 +11,32 @@ import { Provider } from "react-redux";
 import { store } from "../state/store";
 import Auth from "./auth";
 import PrivacyPolicy from "./privacy-policy";
+import { getData } from "../utils/storage";
+import { UserData } from "../types/user";
 
 const Stack = createStackNavigator();
 
 const Layout = () => {
+    const [userData, setUserData] = useState<UserData | null>(null);
+    const [initialPageName, setInitialPageName] = useState<string>('auth');
     const [loaded, error] = useFonts({
         SMBold: require("../assets/fonts/SpaceMono-Bold.ttf"),
         SMRegular: require("../assets/fonts/SpaceMono-Regular.ttf"),
     });
+
+    useEffect(() => {
+        const checkToken = async () => {
+            const storedUserData = await getData('user_data') as UserData;
+            setUserData(storedUserData);
+        }
+
+        checkToken();
+    }, [])
+
+    useEffect(() => {
+        console.log(userData)
+        if (userData) setInitialPageName('home');
+    }, [userData])
 
     useEffect(() => {
         if (error) throw error;
@@ -42,7 +60,7 @@ const Layout = () => {
                 screenOptions={{
                     headerShown: false
                 }}
-                initialRouteName='auth'
+                initialRouteName={initialPageName}
             >
                 <Stack.Screen name='home' options={{ headerShown: false}} component={Home} />
                 <Stack.Screen name='auth' options={{ headerShown: false}} component={Auth} />
