@@ -3,7 +3,7 @@ import { Z_INDEX } from "../../constants";
 
 const styles = StyleSheet.create({
     mapContainer: {
-        height: '50%',
+        height: '70%',
         width: '100%',
         zIndex: Z_INDEX.background,
     }
