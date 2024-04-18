@@ -29,14 +29,20 @@ export const AuthContextProvider : React.FC<AuthContextProps> = ({ children }) =
 
     const login = async (userData: UserData, userToken: string) => {
         setUserData(userData);
-        await storeData({ key: 'user_data', value: userData });
-        await storeData({ key: 'access_token', value: userToken });
+        
+        await Promise.all([
+            storeData({ key: 'user_data', value: userData }),
+            storeData({ key: 'access_token', value: userToken })
+        ]);
       };
 
     const logout = async () => {
         setUserData(null);
-        await removeData('user_data');
-        await removeData('user_token');
+
+        await Promise.all([
+            await removeData('user_data'),
+            await removeData('access_token')
+        ]);
     };
 
     return (
