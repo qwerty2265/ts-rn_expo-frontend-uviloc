@@ -34,7 +34,6 @@ const Layout = () => {
     }, [])
 
     useEffect(() => {
-        console.log(userData)
         if (userData) setInitialPageName('home');
     }, [userData])
 
