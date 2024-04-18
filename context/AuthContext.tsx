@@ -36,6 +36,7 @@ export const AuthContextProvider : React.FC<AuthContextProps> = ({ children }) =
     const logout = async () => {
         setUserData(null);
         await removeData('user_data');
+        await removeData('user_token');
     };
 
     return (
