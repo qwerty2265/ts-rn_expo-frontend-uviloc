@@ -5,17 +5,22 @@ import { TrackerType } from '../types/tracker';
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
-export const fetchTrackersByUsername = createAsyncThunk(
+export const fetchTrackersByUserToken= createAsyncThunk(
     'trackers/fetchByUserName',
-    async ({ username }: { username: string }, { rejectWithValue }) => {
+    async ({ access_token }: { access_token: string }) => {
         try {
-            const response = await axios.get<TrackerType[]>(`${apiUrl}/api/trackers/${username}`);
+            const response = await axios.get<TrackerType[]>(`${apiUrl}/api/trackers/${access_token}`);
             return response.data;
-        } catch (error) {
+        } 
+        catch (error) {
             if (axios.isAxiosError(error)) {
-                return rejectWithValue(error.response?.data);
+                console.error('Axios error:', error.response?.data);
+                throw new Error(`Server responded with error: ${error.response?.status}, ${error.response?.data}`);
+            } 
+            else {
+                console.error('Unexpected error:', error);
+                throw new Error('An unexpected error occurred');
             }
-            throw error;
         }
     }
 );
@@ -37,15 +42,15 @@ const trackerSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(fetchTrackersByUsername.pending, (state) => {
+        builder.addCase(fetchTrackersByUserToken.pending, (state) => {
             state.loading = true;
             state.error = null;
         });
-        builder.addCase(fetchTrackersByUsername.fulfilled, (state, action) => {
+        builder.addCase(fetchTrackersByUserToken.fulfilled, (state, action) => {
             state.trackers = action.payload;
             state.loading = false;
         });
-        builder.addCase(fetchTrackersByUsername.rejected, (state, action) => {
+        builder.addCase(fetchTrackersByUserToken.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string;
         });
