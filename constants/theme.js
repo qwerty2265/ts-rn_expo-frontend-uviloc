@@ -5,7 +5,8 @@ const DARK_THEME = {
     background: '#0f0f0f',
     primary: '#545454',
     secondary: '#808080',
-    accent: '#acd43d'
+    accent: '#acd43d',
+    accentRed: '#EA6C6C'
 }
 
 const LIGHT_THEME = {
@@ -13,7 +14,8 @@ const LIGHT_THEME = {
     background: '#f0f0f0',
     primary: '#ababab',
     secondary: '#808080',
-    accent: '#98c02a'
+    accent: '#98c02a',
+    accentRed: '#921515'
 }
 
 const COLORS = Appearance.getColorScheme() === 'dark' ? DARK_THEME : LIGHT_THEME;
