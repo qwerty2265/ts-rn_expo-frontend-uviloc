@@ -3,11 +3,11 @@ export interface UserData {
     name: string;
     phoneNumber: string;
     email: string;
-    accessToken: string;
+    accessToken?: string;
 }
 
 export interface AuthContextType {
     userData: UserData | null;
-    login: (userData: UserData) => void;
+    login: (userData: UserData, userType: string) => void;
     logout: () => void;
 }

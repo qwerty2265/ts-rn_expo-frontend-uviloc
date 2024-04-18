@@ -38,7 +38,9 @@ function Auth({ navigation } : { navigation : NavigationProp<any>}) {
             });
 
 			if (response.data.access_token) {
-				login(response.data.access_token);
+                const { access_token, ...userData } = response.data;
+
+                login(userData, access_token);
                 navigation.navigate('home');
 			} 
 			else {

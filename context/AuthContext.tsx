@@ -7,7 +7,6 @@ interface AuthContextProps {
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
-const USER_DATA_KEY = 'access_token'
 
 export const AuthContextProvider : React.FC<AuthContextProps> = ({ children }) => {
     const [userData, setUserData] = useState<UserData | null>(null);
@@ -15,7 +14,7 @@ export const AuthContextProvider : React.FC<AuthContextProps> = ({ children }) =
     useEffect(() => {
         const loadUserData = async () => {
             try {
-                const storedUserData = await getData(USER_DATA_KEY);
+                const storedUserData = await getData('user_data');
                 if (storedUserData) {
                     setUserData(storedUserData as UserData);
                 }
@@ -28,14 +27,15 @@ export const AuthContextProvider : React.FC<AuthContextProps> = ({ children }) =
         loadUserData();
     }, []);
 
-    const login = async (userData: UserData) => {
+    const login = async (userData: UserData, userToken: string) => {
         setUserData(userData);
-        await storeData({ key: USER_DATA_KEY, value: userData });
+        await storeData({ key: 'user_data', value: userData });
+        await storeData({ key: 'access_token', value: userToken });
       };
 
     const logout = async () => {
         setUserData(null);
-        await removeData(USER_DATA_KEY);
+        await removeData('user_data');
     };
 
     return (
