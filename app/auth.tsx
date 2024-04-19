@@ -6,6 +6,8 @@ import CustomText from "../components/CustomText";
 import LabeledTextInput from "../components/LabeledTextInput";
 import axios from "axios";
 import { NavigationProp } from "@react-navigation/native";
+import { useDispatch } from "../state/store";
+import { login } from "../slices/authSlice";
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
@@ -27,6 +29,7 @@ const PrivacyPolicyLink = ({ navigation } : { navigation : NavigationProp<any> }
 function Auth({ navigation } : { navigation : NavigationProp<any>}) {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const dispatch = useDispatch();
 
 	const handleLogin = async () => {
         try {
@@ -38,6 +41,7 @@ function Auth({ navigation } : { navigation : NavigationProp<any>}) {
 			if (response.data.access_token) {
                 const { access_token, ...userData } = response.data;
 
+                dispatch(login({userData, userToken: access_token}));
                 navigation.navigate('home');
 			} 
 			else {

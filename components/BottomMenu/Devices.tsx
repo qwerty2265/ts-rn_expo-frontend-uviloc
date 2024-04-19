@@ -2,17 +2,16 @@ import { ActivityIndicator, ScrollView, Alert } from "react-native";
 import styles from "./bottommenu.style";
 import Tracker from "../Tracker/Tracker";
 import { useEffect, useState } from "react";
-import { fetchTrackersByUserToken } from "../../slices/trackerSlice";
+import { fetchTrackersByUserToken, resetTrackers } from "../../slices/trackerSlice";
 import { getData } from "../../utils/storage";
 import { useDispatch, useSelector } from "../../state/store";
 import { COLORS } from "../../constants";
 
 const Devices = () => {
-    const { trackers, loading, error } = useSelector((state) => state.trackers);;
+    const { trackers, loading, error } = useSelector((state) => state.trackers);
+    const userData = useSelector((state) => state.auth.userData);
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const dispatch = useDispatch();
-
-    useEffect(() => {}, [trackers]);
 
     useEffect(() => {
         const fetchToken = async () => {
@@ -26,6 +25,10 @@ const Devices = () => {
         };
         fetchToken();
     }, []);
+
+    useEffect(() => {
+        dispatch(resetTrackers());
+    }, [userData, dispatch]);
 
     useEffect(() => {
         if (accessToken) {

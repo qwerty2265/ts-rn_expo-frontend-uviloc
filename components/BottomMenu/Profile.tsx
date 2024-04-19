@@ -4,15 +4,24 @@ import CustomText from "../CustomText";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { COLORS, SIZE } from "../../constants";
 import { NavigationProp } from "@react-navigation/native";
+import { useDispatch, useSelector } from "../../state/store";
+import { logout } from "../../slices/authSlice";
+import { useEffect } from "react";
 
 const Profile = ({ navigation } : { navigation : NavigationProp<any> }) => {
+    const dispatch = useDispatch();
+    const userData = useSelector((store) => store.auth.userData);
+
 	const handleLogout = async () => {
+        dispatch((logout()));
 		navigation.navigate('auth');
     }
+    
+    useEffect(() => {console.log(userData)});
 
 	return (
 		<View style={styles.bottomMenuPage}>
-			<CustomText bold>{''}</CustomText>
+			<CustomText bold>{userData?.username}</CustomText>
 
 			<TouchableOpacity
                 style={{
