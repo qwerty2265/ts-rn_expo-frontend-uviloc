@@ -1,7 +1,6 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, FONT, SIZE } from "../constants";
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
 import { TouchableOpacity, View } from "react-native";
 import CustomText from "../components/CustomText";
 import LabeledTextInput from "../components/LabeledTextInput";
@@ -28,7 +27,6 @@ const PrivacyPolicyLink = ({ navigation } : { navigation : NavigationProp<any> }
 function Auth({ navigation } : { navigation : NavigationProp<any>}) {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-	const { login } = useAuth();
 
 	const handleLogin = async () => {
         try {
@@ -40,7 +38,6 @@ function Auth({ navigation } : { navigation : NavigationProp<any>}) {
 			if (response.data.access_token) {
                 const { access_token, ...userData } = response.data;
 
-                login(userData, access_token);
                 navigation.navigate('home');
 			} 
 			else {

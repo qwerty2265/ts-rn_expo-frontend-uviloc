@@ -6,7 +6,6 @@ import QrScanner from "./qr-scanner";
 import { useEffect, useState } from "react";
 import { SplashScreen } from "expo-router";
 import { COLORS } from "../constants";
-import { AuthContextProvider } from "../context/AuthContext";
 import { Provider } from "react-redux";
 import { store } from "../state/store";
 import Auth from "./auth";
@@ -52,7 +51,6 @@ const Layout = () => {
     }
 
     return (
-        <AuthContextProvider>
         <Provider store={store}>
         <NavigationContainer independent={true}>
             <Stack.Navigator
@@ -106,7 +104,6 @@ const Layout = () => {
             </Stack.Navigator>
         </NavigationContainer>
         </Provider>
-        </AuthContextProvider>
     )
 }
 
