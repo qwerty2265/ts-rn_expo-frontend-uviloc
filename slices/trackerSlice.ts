@@ -7,10 +7,14 @@ import { generateRandomString } from '../utils/common';
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 export const fetchTrackersByUserToken = createAsyncThunk(
-    'trackers/fetchByUserName',
+    'trackers/fetchByUserToken',
     async ({ access_token }: { access_token: string }) => {
         try {
-            const response = await axios.get<TrackerType[]>(`${apiUrl}/api/trackers/${access_token}`);
+            const response = await axios.get<TrackerType[]>(`${apiUrl}/api/trackers/get-by-access-token`, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`
+                }
+            });
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
