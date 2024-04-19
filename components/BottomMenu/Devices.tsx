@@ -24,7 +24,7 @@ const Devices = () => {
             }
         };
         fetchToken();
-    }, []);
+    }, [userData]);
 
     useEffect(() => {
         dispatch(resetTrackers());

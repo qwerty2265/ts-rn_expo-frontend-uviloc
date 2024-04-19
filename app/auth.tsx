@@ -33,7 +33,7 @@ function Auth({ navigation } : { navigation : NavigationProp<any>}) {
 
 	const handleLogin = async () => {
         try {
-            const response = await axios.post(`${apiUrl}/api/users/create-or-get`, {
+            const response = await axios.post(`${apiUrl}/api/users/create-or-get/`, {
                 "username": username,
 				"password": password,
             });
