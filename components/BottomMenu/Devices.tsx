@@ -1,24 +1,23 @@
-import { View, Text, ActivityIndicator, ScrollView } from "react-native";
+import { ActivityIndicator, ScrollView, Alert } from "react-native";
 import styles from "./bottommenu.style";
-import CustomText from "../CustomText"; // Предположительно это используется в другом месте вашего приложения
 import Tracker from "../Tracker/Tracker";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { fetchTrackersByUserToken } from "../../slices/trackerSlice";
 import { getData } from "../../utils/storage";
-import { AppDispatch, RootState } from "../../state/store";
+import { useDispatch, useSelector } from "../../state/store";
 import { COLORS } from "../../constants";
-import { UserData } from "../../types/user";
 
 const Devices = () => {
-    const { trackers, loading, error } = useSelector((state: RootState) => state.trackers);
+    const { trackers, loading, error } = useSelector((state) => state.trackers);;
     const [accessToken, setAccessToken] = useState<string | null>(null);
-    const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useDispatch();
+
+    useEffect(() => {}, [trackers]);
 
     useEffect(() => {
         const fetchToken = async () => {
-            console.log('fetching');
             const access_token = await getData('access_token');
+            console.log(accessToken)
             if (typeof access_token === 'string' || access_token === null) {
                 setAccessToken(access_token);
             } else {
@@ -39,14 +38,20 @@ const Devices = () => {
     }
 
     if (error) {
-        return <Text>Error loading trackers: {error}</Text>;
+        console.log("Error received:", error);
+        Alert.alert(
+            "Error",
+            `Error loading trackers: ${error}`,
+            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+            { cancelable: false }
+        );
     }
 
     return (
         <ScrollView style={styles.bottomMenuPage} contentContainerStyle={{ flexGrow: 1 }}>
             {trackers.map(tracker => (
                 <Tracker
-                key={tracker.id}
+                key={tracker.token}
                 name={tracker.name}
                 lastTimeSeen={tracker.updated_at}
                 location={''}

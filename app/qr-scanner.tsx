@@ -8,8 +8,7 @@ import { NavigationProp } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import { getData } from "../utils/storage";
 import { UserData } from "../types/user";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../state/store";
+import { AppDispatch, useDispatch } from "../state/store";
 import { addTracker } from "../slices/trackerSlice";
 
 interface QrScannerProps {
@@ -21,7 +20,7 @@ function QrScanner({ navigation } : QrScannerProps) {
     const [username, setUsername] = useState<string | null>(null);
     const [scannedResult, setScannedResult] = useState<string | null>(null);
 
-    const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchUsername = async () => {
