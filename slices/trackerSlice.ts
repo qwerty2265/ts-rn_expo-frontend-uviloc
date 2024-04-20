@@ -105,8 +105,15 @@ const trackerSlice = createSlice({
             state.error = null;
         });
         builder.addCase(fetchTrackersByUserToken.fulfilled, (state, action) => {
-            state.trackers = state.trackers.concat(action.payload);
-            state.loading = false;
+            action.payload.forEach(newTracker => {
+                const existingTrackerIndex = state.trackers.findIndex(existingTracker => existingTracker.token === newTracker.token);
+                if (existingTrackerIndex !== -1) {
+                    state.trackers[existingTrackerIndex] = newTracker;
+                } else {
+                    state.trackers.push(newTracker);
+                }
+            });
+            state.loading = false;       
         });
         builder.addCase(fetchTrackersByUserToken.rejected, (state, action) => {
             state.loading = false;
