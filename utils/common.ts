@@ -11,8 +11,8 @@ const generateRandomString = (): string => {
 
 const convertUTCToLocalTime = (utcDateString: string): TimeType => {
     const date = new Date(utcDateString);
-    const timezoneOffset = date.getTimezoneOffset() * 60000; 
-    const localDate = new Date(date.getTime() - timezoneOffset);
+    const timezoneOffset = date.getTimezoneOffset() / 60; 
+    const localDate = new Date(date.getTime() + timezoneOffset);
 
     const time: TimeType = {
         hours: localDate.getHours().toString().padStart(2, '0'),
