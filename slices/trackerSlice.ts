@@ -1,27 +1,35 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { RootState } from '../state/store';
-import { TrackerType } from '../types/tracker';
+import { TrackerType, TrackerGeolocationType } from '../types/tracker';
 import { generateRandomString } from '../utils/common';
 
 const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 export const fetchTrackersByUserToken = createAsyncThunk<
-        TrackerType[],
-        { access_token: string },
-        { rejectValue: string } 
-    >(
+    TrackerType[],
+    { access_token: string },
+    { rejectValue: string }
+>(
     'trackers/fetchByUserToken',
     async ({ access_token }: { access_token: string }, { rejectWithValue }) => {
-        if (!access_token) return rejectWithValue('Access_token variable does not filled');
+        if (!access_token) return rejectWithValue('Access_token variable is not filled');
 
         try {
-            const response = await axios.get<TrackerType[]>(`${apiUrl}/api/trackers/get-by-access-token`, {
+            const trackersResponse = await axios.get<TrackerType[]>(`${apiUrl}/api/trackers/get-by-access-token`, {
                 headers: {
                     Authorization: `Bearer ${access_token}`
                 }
             });
-            return response.data;
+
+            const trackers = trackersResponse.data;
+
+            const enrichedTrackers: TrackerType[] = await Promise.all(trackers.map(async (tracker) => {
+                const geoResponse = await axios.get<TrackerGeolocationType>(`${apiUrl}/api/geolocations/get-latest-by-tracker-token/${tracker.token}`);
+                tracker.latest_geolocation = geoResponse.data; // Предполагаем, что API возвращает правильный объект TrackerGeolocationType
+                return tracker;
+            }));
+
+            return enrichedTrackers;
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 return rejectWithValue(`${error.response?.data}`);
@@ -102,7 +110,7 @@ const trackerSlice = createSlice({
         });
         builder.addCase(fetchTrackersByUserToken.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload; // Здесь изменено на action.error.message
+            state.error = action.payload;
         });
         builder.addCase(addTracker.pending, (state) => {
             state.loading = true;

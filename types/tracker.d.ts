@@ -6,6 +6,15 @@ interface TrackerType {
     name: string;
     created_at: string;
     updated_at: string;
+    latest_geolocation: TrackerGeolocationType;
 }
 
-export { TrackerType }
+interface TrackerGeolocationType {
+    id: number;
+    tracker_token: string;
+    coordinates: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export { TrackerType, TrackerGeolocationType }
