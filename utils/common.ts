@@ -25,4 +25,4 @@ const convertUTCToLocalTime = (utcDateString: string): TimeType => {
     return time;
 };
 
-export { generateRandomString };
+export { generateRandomString, convertUTCToLocalTime };
