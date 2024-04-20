@@ -1,11 +1,11 @@
-import { ActivityIndicator, ScrollView, Alert } from "react-native";
+import { ActivityIndicator, ScrollView, Alert, View } from "react-native";
 import styles from "./bottommenu.style";
 import Tracker from "../Tracker/Tracker";
 import { useEffect, useState } from "react";
 import { clearError, fetchTrackersByUserToken, resetTrackers } from "../../slices/trackerSlice";
 import { getData } from "../../utils/storage";
 import { useDispatch, useSelector } from "../../state/store";
-import { COLORS } from "../../constants";
+import { COLORS, SIZE } from "../../constants";
 
 const Devices = () => {
     const { trackers, loading, error } = useSelector((state) => state.trackers);
@@ -37,7 +37,7 @@ const Devices = () => {
     }, [accessToken, dispatch]);
 
     if (loading) {
-        return <ActivityIndicator style={{ flex: 1, backgroundColor: COLORS.background }} size="large" color="#0000ff" />;
+        return <ActivityIndicator style={{ flex: 1, backgroundColor: COLORS.background }} size="large" color={COLORS.accent} />;
     }
 
     if (error) {
@@ -54,14 +54,16 @@ const Devices = () => {
     }
 
     return (
-        <ScrollView style={styles.bottomMenuPage} contentContainerStyle={{ flexGrow: 1 }}>
-            {trackers.map(tracker => (
-                <Tracker
-                key={tracker.token}
-                name={tracker.name}
-                lastTimeSeen={tracker.updated_at}
-                location={''}
-                distance={''}                />
+        <ScrollView style={styles.bottomMenuPage} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}>
+            {trackers.map((tracker, index) => (
+                <View key={tracker.token} style={index !== 0 && { marginTop: SIZE.small }}>
+                    <Tracker
+                        name={tracker.name}
+                        lastTimeSeen={tracker.updated_at}
+                        location={''}
+                        distance={''}               
+                    />
+                </View>
             ))}
         </ScrollView>
     );
