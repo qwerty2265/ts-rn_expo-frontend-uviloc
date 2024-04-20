@@ -9,10 +9,23 @@ const generateRandomString = (): string => {
     return result;
 };
 
-const convertUTCToLocalTime = (utcDateString: string): TimeType => {
+const convertUTCToLocalTime = (utcDateString: string): string | TimeType => {
     const date = new Date(utcDateString);
+    const currentTime = new Date();
     const timezoneOffset = date.getTimezoneOffset() / 60; 
     const localDate = new Date(date.getTime() + timezoneOffset);
+
+    const differenceInMinutes = Math.floor((currentTime.getTime() - date.getTime()) / (1000 * 60));
+
+    if (differenceInMinutes < 1) {
+        return 'Now';
+    }
+    else if (differenceInMinutes <= 60) {
+        return `${differenceInMinutes}m ago`;
+    }
+    else if (differenceInMinutes == 60) {
+        return '1h ago';
+    }
 
     const time: TimeType = {
         hours: localDate.getHours().toString().padStart(2, '0'),
