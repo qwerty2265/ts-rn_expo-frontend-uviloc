@@ -7,13 +7,19 @@ import { TimeType } from "../../types/time";
 
 interface TrackerProps {
     name: string,
-    lastTimeSeen: TimeType,
+    lastTimeSeen: TimeType | string,
     location: string,
     distance: string,
 }
 
 const Tracker: React.FC<TrackerProps> = ({ name, lastTimeSeen, location, distance }) => {
-    const formattedTime = `${lastTimeSeen.hours}:${lastTimeSeen.minutes} · ${lastTimeSeen.day}.${lastTimeSeen.month}.${lastTimeSeen.year}`;
+    let formattedTime = '';
+    if (typeof lastTimeSeen === 'object') {
+        formattedTime = `${lastTimeSeen.hours}:${lastTimeSeen.minutes} · ${lastTimeSeen.day}.${lastTimeSeen.month}.${lastTimeSeen.year}`;
+    } 
+    else {
+        formattedTime = lastTimeSeen;
+    }
 
     return (
         <View style={styles.tracker}>
@@ -26,6 +32,6 @@ const Tracker: React.FC<TrackerProps> = ({ name, lastTimeSeen, location, distanc
             <CustomText>{distance}</CustomText>
         </View>
     )
-}
+} 
 
 export default Tracker;
