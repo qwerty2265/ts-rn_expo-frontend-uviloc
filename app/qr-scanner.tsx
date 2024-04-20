@@ -1,14 +1,12 @@
-import { SafeAreaView } from "react-native-safe-area-context";
 import CustomText from "../components/CustomText";
 import { COLORS, Z_INDEX, icons } from "../constants";
 import { CameraView, useCameraPermissions } from 'expo-camera/next'
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
-import { useNavigation } from "expo-router";
 import { getData } from "../utils/storage";
 import { UserData } from "../types/user";
-import { AppDispatch, useDispatch } from "../state/store";
+import { useDispatch } from "../state/store";
 import { addTracker } from "../slices/trackerSlice";
 
 interface QrScannerProps {
@@ -41,8 +39,18 @@ function QrScanner({ navigation } : QrScannerProps) {
 
     useEffect(() => {
         if (scannedResult === null || username === null) return
-        dispatch(addTracker({ username, tracker_token: scannedResult }));
-
+        Alert.prompt(
+            'Enter tracker name',
+            'Tracker name',
+            [
+                {
+                    text: 'Submit',
+                    onPress: (trackerName) => {
+                        dispatch(addTracker({ tracker_name: trackerName, username, tracker_token: scannedResult }));
+                    }
+                }
+            ]
+        )
     }, [scannedResult])
 
     const handleBarcodeScanned = ({ data }: { data: string }) => {

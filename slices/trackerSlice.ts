@@ -33,19 +33,21 @@ export const fetchTrackersByUserToken = createAsyncThunk<
 
 export const addTracker = createAsyncThunk<
         TrackerType,
-        { username: string, tracker_token: string },
+        { tracker_name?: string, username: string, tracker_token: string },
         { rejectValue: string }
     >(
     'trackers/addTracker',
-    async ({ username, tracker_token }, { rejectWithValue }) => {
+    async ({ tracker_name, username, tracker_token }, { rejectWithValue }) => {
         if (!username || !tracker_token) return rejectWithValue('Username or tracker_token variables are not filled');
 
         try {
-            const randomString = generateRandomString();
+            let trackerName = tracker_name;
+            if (!trackerName) trackerName = generateRandomString();
+            
             const response = await axios.put<TrackerType>(`${apiUrl}/api/trackers/link-to-user`, {
                 token: tracker_token,
                 user_username: username,
-                name: randomString
+                name: trackerName,
             });
 
             if (typeof response.data === 'string') {
