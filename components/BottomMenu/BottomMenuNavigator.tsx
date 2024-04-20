@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { COLORS, FONT, SIZE, icons } from "../../constants";
-import { Pressable } from "react-native";
+import { Platform, TextStyle } from "react-native";
 
 interface BottomMenuNavigatorProps {
     children: ReactNode;
@@ -10,27 +10,39 @@ interface BottomMenuNavigatorProps {
 const Tab = createBottomTabNavigator();
 
 const BottomMenuNavigator: React.FC<BottomMenuNavigatorProps> = ({ children }) => {
+    const headerTitleStyle = Platform.select<TextStyle>({
+        ios: {
+            height: 80,
+            padding: 0,
+            margin: 0,
+            fontFamily: FONT.bold,
+            fontSize: SIZE.large,
+            color: COLORS.text,
+        },
+        android: {
+            height: 65,
+            padding: 0,
+            margin: 0,
+            fontFamily: FONT.bold,
+            fontSize: SIZE.large,
+            color: COLORS.text,
+        },
+    });
+
     return (
         <Tab.Navigator 
         screenOptions={({ route }) => ({
             headerStyle: {
                 height: 50,
                 borderBottomWidth: 0.5,
-                borderBottomColor: COLORS.background,
+                borderBottomColor: COLORS.secondary,
                 backgroundColor: COLORS.background,
                 shadowOffset: {
                     width: 0, height: 0
                 },
                 elevation: 0,
             },
-            headerTitleStyle: {
-                height: 60,
-                padding: 0,
-                margin: 0,
-                fontFamily: FONT.bold,
-                fontSize: SIZE.large,
-                color: COLORS.text,
-            },
+            headerTitleStyle: headerTitleStyle,
             headerTitleAlign: 'left',
 
             tabBarStyle: {
@@ -44,7 +56,6 @@ const BottomMenuNavigator: React.FC<BottomMenuNavigatorProps> = ({ children }) =
             tabBarLabelStyle: {
                 fontFamily: FONT.bold,
             },
-
             tabBarIcon: ({ focused, size }) => {
                 let iconComponent;
                 let tabColor = focused ? COLORS.accent : COLORS.text;

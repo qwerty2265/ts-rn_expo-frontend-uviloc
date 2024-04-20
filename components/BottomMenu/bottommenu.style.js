@@ -15,20 +15,6 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.background,
         padding: 20,
     },
-    profileForm : {
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        width: '80%',
-        maxWidth: 300,
-    },
-    profileFormButton : {
-        marginTop: 15,
-        backgroundColor: COLORS.accent,
-        padding: 10,
-        borderRadius: 5,
-        alignItems: 'center',
-        cursor: 'pointer'
-    }
 })
 
 export default styles;

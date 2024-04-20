@@ -1,10 +1,9 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Devices from "./Devices";
-import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./bottommenu.style";
 import BottomMenuNavigator from "./BottomMenuNavigator";
 import { useNavigation } from "@react-navigation/native";
-import { Pressable, View } from "react-native";
+import { Platform, Pressable, View, ViewStyle } from "react-native";
 import { COLORS, icons } from "../../constants";
 import Profile from "./Profile";
 
@@ -12,11 +11,26 @@ const Tab = createBottomTabNavigator();
 
 const BottomMenu = () => {
     const navigation = useNavigation();
+
+    const headerRightStyle = Platform.select<ViewStyle>({
+        ios: {
+            position: 'absolute',
+            top: -35,
+            right: 10,
+        },
+        android: {
+            position: 'absolute',
+            top: -20, 
+            right: 10,
+        },
+    });
+    
     return (
         <View style={styles.bottomMenu} >
             <BottomMenuNavigator>
                 <Tab.Screen options={{
-                    headerRight: () => (
+                    headerRightContainerStyle: headerRightStyle,
+                    headerRight: () => (                    
                         <Pressable 
                             style={{ backgroundColor: 'transparent'}}
                             // @ts-expect-error
@@ -24,14 +38,13 @@ const BottomMenu = () => {
                         >
                             {({ pressed }) => (
                                 <icons.plus 
-                                    style={{ marginRight: 15, marginBottom: 30, opacity: pressed ? 0.5 : 1 }}
+                                    style={{ opacity: pressed ? 0.5 : 1 }}
                                     height={25} 
                                     width={25} 
                                     stroke={COLORS.secondary} 
                                 />
                             )}                  
                         </Pressable>
-
                     ),
                 }}
                 name='Devices' 
