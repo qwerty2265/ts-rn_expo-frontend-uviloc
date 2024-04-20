@@ -7,6 +7,7 @@ import { getData } from "../../utils/storage";
 import { useDispatch, useSelector } from "../../state/store";
 import { COLORS, SIZE } from "../../constants";
 import { convertUTCToLocalTime } from "../../utils/common";
+import { useInterval } from "../../hooks/useInterval";
 
 const Devices = () => {
     const { trackers, loading, error } = useSelector((state) => state.trackers);
@@ -34,6 +35,12 @@ const Devices = () => {
     useEffect(() => {
         if (accessToken) {
             dispatch(fetchTrackersByUserToken({ access_token: accessToken }));
+
+            const intervalId = setInterval(() => {
+                dispatch(fetchTrackersByUserToken({ access_token: accessToken }));
+            }, 20000);
+    
+            return () => clearInterval(intervalId);
         }
     }, [accessToken, dispatch]);
 
