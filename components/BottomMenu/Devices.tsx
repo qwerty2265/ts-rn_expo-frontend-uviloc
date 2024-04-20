@@ -6,6 +6,7 @@ import { clearError, fetchTrackersByUserToken, resetTrackers } from "../../slice
 import { getData } from "../../utils/storage";
 import { useDispatch, useSelector } from "../../state/store";
 import { COLORS, SIZE } from "../../constants";
+import { convertUTCToLocalTime } from "../../utils/common";
 
 const Devices = () => {
     const { trackers, loading, error } = useSelector((state) => state.trackers);
@@ -59,7 +60,7 @@ const Devices = () => {
                 <View key={tracker.token} style={index !== 0 && { marginTop: SIZE.small }}>
                     <Tracker
                         name={tracker.name}
-                        lastTimeSeen={tracker.updated_at}
+                        lastTimeSeen={convertUTCToLocalTime(tracker.latest_geolocation.created_at)}
                         location={''}
                         distance={''}               
                     />
