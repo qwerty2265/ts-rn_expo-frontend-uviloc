@@ -12,12 +12,12 @@ const Profile = ({ navigation } : { navigation : NavigationProp<any> }) => {
     const dispatch = useDispatch();
     const userData = useSelector((store) => store.auth.userData);
 
+    useEffect(() => {}, [userData]);
+
 	const handleLogout = async () => {
         dispatch((logout()));
 		navigation.navigate('auth');
     }
-    
-    useEffect(() => {console.log(userData)});
 
 	return (
 		<View style={styles.bottomMenuPage}>
