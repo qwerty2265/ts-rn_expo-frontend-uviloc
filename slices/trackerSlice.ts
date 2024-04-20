@@ -84,6 +84,9 @@ const trackerSlice = createSlice({
             state.trackers = [];
             state.loading = false;
             state.error = null;
+        },
+        clearError(state) {
+            state.error = null;
         }
     },
     extraReducers: (builder) => {
@@ -116,5 +119,5 @@ const trackerSlice = createSlice({
     }
 });
 
-export const { resetTrackers } = trackerSlice.actions;
+export const { resetTrackers, clearError } = trackerSlice.actions;
 export default trackerSlice.reducer;

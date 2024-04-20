@@ -2,7 +2,7 @@ import { ActivityIndicator, ScrollView, Alert } from "react-native";
 import styles from "./bottommenu.style";
 import Tracker from "../Tracker/Tracker";
 import { useEffect, useState } from "react";
-import { fetchTrackersByUserToken, resetTrackers } from "../../slices/trackerSlice";
+import { clearError, fetchTrackersByUserToken, resetTrackers } from "../../slices/trackerSlice";
 import { getData } from "../../utils/storage";
 import { useDispatch, useSelector } from "../../state/store";
 import { COLORS } from "../../constants";
@@ -45,7 +45,10 @@ const Devices = () => {
         Alert.alert(
             "Error",
             `Error loading trackers: ${error}`,
-            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+            [{ text: "OK", onPress: () => {
+                console.log("OK Pressed")
+                dispatch(clearError());
+            }}],
             { cancelable: false }
         );
     }
