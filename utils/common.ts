@@ -1,3 +1,4 @@
+import { CoordinatesType } from "../types/coordinates";
 import { TimeType } from "../types/time";
 
 const generateRandomString = (): string => {
@@ -38,4 +39,9 @@ const convertUTCToLocalTime = (utcDateString: string): string | TimeType => {
     return time;
 };
 
-export { generateRandomString, convertUTCToLocalTime };
+const parseCoordinates = (coordinatesString: string): CoordinatesType => {
+    const [latitude, longitude] = coordinatesString.split(',');
+    return { latitude, longitude };
+};
+
+export { generateRandomString, convertUTCToLocalTime, parseCoordinates };
