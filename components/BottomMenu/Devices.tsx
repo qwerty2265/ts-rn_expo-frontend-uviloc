@@ -47,7 +47,7 @@ const Devices = () => {
     }, [accessToken, dispatch]);
 
     if (loading || !userLocation) {
-        return <CustomActivityIndicator size='small' />
+        return <CustomActivityIndicator style={{ flex: 1}} size='small' />
     }
 
     if (error) {
