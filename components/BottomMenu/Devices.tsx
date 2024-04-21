@@ -1,13 +1,14 @@
-import { ActivityIndicator, ScrollView, Alert, View } from "react-native";
+import { ScrollView, Alert, View } from "react-native";
 import styles from "./bottommenu.style";
 import Tracker from "../Tracker/Tracker";
 import { useEffect, useState } from "react";
 import { clearError, fetchTrackersByUserToken, resetTrackers } from "../../slices/trackerSlice";
 import { getData } from "../../utils/storage";
 import { useDispatch, useSelector } from "../../state/store";
-import { COLORS, SIZE } from "../../constants";
+import { SIZE } from "../../constants";
 import { convertUTCToLocalTime, parseCoordinates } from "../../utils/common";
 import { calculateDistance } from "../../utils/coordinates";
+import { CustomActivityIndicator } from "../CustomActivityIndicator";
 
 const Devices = () => {
     const { trackers, loading, error } = useSelector((state) => state.trackers);
@@ -46,7 +47,7 @@ const Devices = () => {
     }, [accessToken, dispatch]);
 
     if (loading || !userLocation) {
-        return <ActivityIndicator style={{ flex: 1, backgroundColor: COLORS.background }} size="large" color={COLORS.accent} />;
+        return <CustomActivityIndicator size='small' />
     }
 
     if (error) {
