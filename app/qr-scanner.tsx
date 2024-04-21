@@ -5,8 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import { getData } from "../utils/storage";
-import { UserData } from "../types/user";
-import { useDispatch } from "../state/store";
+import { useDispatch, useSelector } from "../state/store";
 import { addTracker } from "../slices/trackerSlice";
 
 interface QrScannerProps {
@@ -15,30 +14,30 @@ interface QrScannerProps {
 
 function QrScanner({ navigation } : QrScannerProps) {
     const [permission, requestPermission] = useCameraPermissions();
-    const [username, setUsername] = useState<string | null>(null);
     const [scannedResult, setScannedResult] = useState<string | null>(null);
+    const [accessToken, setAccessToken] = useState<string | null>(null);
+    const userData = useSelector((state) => state.auth.userData);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const fetchUsername = async () => {
-            const user_data = await getData('user_data'); // Тип unknown
-            const typedUserData = user_data as UserData | undefined; // Приведение к типу UserData или undefined
-
-            if (typedUserData && typedUserData.username) {
-                setUsername(typedUserData.username);
-            } 
-            else {
-                console.error("Invalid or missing user data:", typedUserData);
+        const fetchToken = async () => {
+            const access_token = await getData('access_token');
+            if (typeof access_token === 'string' || access_token === null) {
+                setAccessToken(access_token);
+            } else {
+                console.error("Received non-string access token:", access_token);
             }
         };
+        fetchToken();
+    }, [userData]);
 
-        fetchUsername();
+    useEffect(() => {
         requestPermission();
     }, []);
 
     useEffect(() => {
-        if (scannedResult === null || username === null) return
+        if (scannedResult === null || accessToken === null) return
         Alert.prompt(
             'Enter tracker name',
             'Tracker name',
@@ -46,7 +45,7 @@ function QrScanner({ navigation } : QrScannerProps) {
                 {
                     text: 'Submit',
                     onPress: (trackerName) => {
-                        dispatch(addTracker({ tracker_name: trackerName, username, tracker_token: scannedResult }));
+                        dispatch(addTracker({ tracker_name: trackerName, access_token: accessToken, tracker_token: scannedResult }));
                     }
                 }
             ]
