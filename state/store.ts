@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import trackerReducer from '../slices/trackerSlice';
 import authReducer from '../slices/authSlice';
 import locationReducer from '../slices/locationSlice';
+import selectedTrackerReducer from '../slices/selectedTrackerSlice';
 import { TypedUseSelectorHook, useDispatch as reduxUseDispatch, useSelector as reduxUseSelector  } from 'react-redux';
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
         trackers: trackerReducer,
         auth: authReducer,
         location: locationReducer,
+        selectedTracker: selectedTrackerReducer,
     },
 });
 
