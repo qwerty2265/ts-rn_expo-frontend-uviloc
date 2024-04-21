@@ -24,8 +24,12 @@ export const fetchTrackersByUserToken = createAsyncThunk<
             const trackers = trackersResponse.data;
 
             const enrichedTrackers: TrackerType[] = await Promise.all(trackers.map(async (tracker) => {
-                const geoResponse = await axios.get<TrackerGeolocationType>(`${apiUrl}/api/geolocations/get-latest-by-tracker-token/${tracker.token}`);
-                tracker.latest_geolocation = geoResponse.data; // Предполагаем, что API возвращает правильный объект TrackerGeolocationType
+                const geoResponse = await axios.get<TrackerGeolocationType>(`${apiUrl}/api/geolocations/get-latest-by-tracker-token`, {
+                    params: {
+                        tracker_token: tracker.token
+                    }
+                });
+                tracker.latest_geolocation = geoResponse.data;
                 return tracker;
             }));
 
