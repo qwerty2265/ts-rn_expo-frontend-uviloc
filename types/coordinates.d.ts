@@ -1,6 +1,6 @@
 interface CoordinatesType {
-    latitude: string,
-    longitude: string,
+    latitude: number,
+    longitude: number,
 }
 
 export { CoordinatesType }
