@@ -110,7 +110,12 @@ const trackerSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchTrackersByUserToken.pending, (state) => {
-            state.loading = true;
+            if (state.trackers.length > 0) {
+                state.loading = false;
+            } 
+            else {
+                state.loading = true;
+            }
             state.error = null;
         });
         builder.addCase(fetchTrackersByUserToken.fulfilled, (state, action) => {
