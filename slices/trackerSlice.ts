@@ -25,6 +25,9 @@ export const fetchTrackersByUserToken = createAsyncThunk<
 
             const enrichedTrackers: TrackerType[] = await Promise.all(trackers.map(async (tracker) => {
                 const geoResponse = await axios.get<TrackerGeolocationType>(`${apiUrl}/api/geolocations/get-latest-by-tracker-token`, {
+                    headers: {
+                        Authorization: `Bearer ${access_token}`
+                    },
                     params: {
                         tracker_token: tracker.token
                     }
