@@ -5,7 +5,7 @@ import { TouchableOpacity, View } from "react-native";
 import CustomText from "../components/CustomText";
 import LabeledTextInput from "../components/LabeledTextInput";
 import axios from "axios";
-import { NavigationProp } from "@react-navigation/native";
+import { CommonActions, NavigationProp } from "@react-navigation/native";
 import { useDispatch } from "../state/store";
 import { login } from "../slices/authSlice";
 
@@ -42,7 +42,12 @@ function Auth({ navigation } : { navigation : NavigationProp<any>}) {
                 const { access_token, ...userData } = response.data;
 
                 dispatch(login({userData, userToken: access_token}));
-                navigation.navigate('home');
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 0,
+                        routes: [{ name: 'home' }],
+                    })
+                );
 			} 
 			else {
 				console.error('Login failed: No access token received');

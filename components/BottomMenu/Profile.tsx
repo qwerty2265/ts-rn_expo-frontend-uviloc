@@ -3,7 +3,7 @@ import styles from "./bottommenu.style";
 import CustomText from "../CustomText";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { COLORS, SIZE } from "../../constants";
-import { NavigationProp } from "@react-navigation/native";
+import { CommonActions, NavigationProp } from "@react-navigation/native";
 import { useDispatch, useSelector } from "../../state/store";
 import { logout } from "../../slices/authSlice";
 import { useEffect } from "react";
@@ -16,7 +16,12 @@ const Profile = ({ navigation } : { navigation : NavigationProp<any> }) => {
 
 	const handleLogout = async () => {
         dispatch((logout()));
-		navigation.navigate('auth');
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'auth' }],
+            })
+        );
     }
 
 	return (
