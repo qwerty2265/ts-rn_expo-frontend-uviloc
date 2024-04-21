@@ -6,11 +6,12 @@ import { clearError, fetchTrackersByUserToken, resetTrackers } from "../../slice
 import { getData } from "../../utils/storage";
 import { useDispatch, useSelector } from "../../state/store";
 import { COLORS, SIZE } from "../../constants";
-import { convertUTCToLocalTime } from "../../utils/common";
-import { useInterval } from "../../hooks/useInterval";
+import { convertUTCToLocalTime, parseCoordinates } from "../../utils/common";
+import { calculateDistance } from "../../utils/coordinates";
 
 const Devices = () => {
     const { trackers, loading, error } = useSelector((state) => state.trackers);
+    const userLocation = useSelector((state) => state.location.userLocation);
     const userData = useSelector((state) => state.auth.userData);
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const dispatch = useDispatch();
@@ -44,7 +45,7 @@ const Devices = () => {
         }
     }, [accessToken, dispatch]);
 
-    if (loading) {
+    if (loading || !userLocation) {
         return <ActivityIndicator style={{ flex: 1, backgroundColor: COLORS.background }} size="large" color={COLORS.accent} />;
     }
 
@@ -69,7 +70,7 @@ const Devices = () => {
                         name={tracker.name}
                         lastTimeSeen={convertUTCToLocalTime(tracker.latest_geolocation.created_at)}
                         location={''}
-                        distance={''}               
+                        distance={calculateDistance(userLocation, parseCoordinates(`${tracker.latest_geolocation.coordinates}`) )}               
                     />
                 </View>
             ))}
