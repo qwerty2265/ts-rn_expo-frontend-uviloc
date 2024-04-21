@@ -6,13 +6,27 @@ import { COLORS, SIZE } from "../../constants";
 import { CommonActions, NavigationProp } from "@react-navigation/native";
 import { useDispatch, useSelector } from "../../state/store";
 import { logout } from "../../slices/authSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { CustomActivityIndicator } from "../CustomActivityIndicator";
+import { getData } from "../../utils/storage";
+import { UserData } from "../../types/user";
 
 const Profile = ({ navigation } : { navigation : NavigationProp<any> }) => {
     const dispatch = useDispatch();
-    const userData = useSelector((store) => store.auth.userData);
+    const [userData, setUserData] = useState<UserData | null>(null);
 
-    useEffect(() => {}, [userData]);
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const newData = await getData('user_data') as UserData;
+            if (newData) {
+                setUserData(newData)
+            }
+        };
+
+        const timer = setTimeout(fetchUserData, 1000);
+        return () => clearTimeout(timer);
+    }, []);
+
 
 	const handleLogout = async () => {
         dispatch((logout()));
@@ -24,9 +38,11 @@ const Profile = ({ navigation } : { navigation : NavigationProp<any> }) => {
         );
     }
 
+    if (!userData) return <CustomActivityIndicator style={{ flex: 1}} />
+
 	return (
 		<View style={styles.bottomMenuPage}>
-			<CustomText bold>{userData?.username}</CustomText>
+			<CustomText bold>{userData.username}</CustomText>
 
 			<TouchableOpacity
                 style={{
