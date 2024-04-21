@@ -49,30 +49,54 @@ export const fetchTrackersByUserToken = createAsyncThunk<
 );
 
 export const addTracker = createAsyncThunk<
-        TrackerType,
-        { tracker_name?: string, username: string, tracker_token: string },
-        { rejectValue: string }
-    >(
+    TrackerType,
+    { tracker_name?: string; access_token: string; tracker_token: string },
+    { rejectValue: string }
+>(
     'trackers/addTracker',
-    async ({ tracker_name, username, tracker_token }, { rejectWithValue }) => {
-        if (!username || !tracker_token) return rejectWithValue('Username or tracker_token variables are not filled');
+    async ({ tracker_name, access_token, tracker_token }, { rejectWithValue }) => {
+        if (!access_token || !tracker_token) {
+            return rejectWithValue('Access or tracker token variables are not filled');
+        }
 
         try {
             let trackerName = tracker_name;
-            if (!trackerName) trackerName = generateRandomString();
-            
-            const response = await axios.put<TrackerType>(`${apiUrl}/api/trackers/link-to-user`, {
-                token: tracker_token,
-                user_username: username,
-                name: trackerName,
-            });
-
-            if (typeof response.data === 'string') {
-                return rejectWithValue(response.data);
+            if (!trackerName) {
+                trackerName = generateRandomString();
             }
-            return response.data;
 
-        } catch (error) {
+            const trackerResponse = await axios.put<TrackerType>(
+                `${apiUrl}/api/trackers/link-to-user`,
+                {
+                    token: tracker_token,
+                    name: trackerName,
+                    sim_phone_number: null
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${access_token}`
+                    }
+                }
+            );
+
+            const tracker = trackerResponse.data;
+            if (typeof tracker === 'string') return rejectWithValue(tracker);
+
+            const geoResponse = await axios.get<TrackerGeolocationType>(
+                `${apiUrl}/api/geolocations/get-latest-by-tracker-token`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${access_token}`
+                    },
+                    params: {
+                        tracker_token: tracker.token
+                    }
+                }
+            );
+            tracker.latest_geolocation = geoResponse.data;
+            return tracker;
+        } 
+        catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 return rejectWithValue(`${error.response.data}`);
             }
@@ -81,6 +105,7 @@ export const addTracker = createAsyncThunk<
         }
     }
 );
+
 
 
 interface TrackerState {
@@ -137,11 +162,14 @@ const trackerSlice = createSlice({
             state.loading = true;
         });
         builder.addCase(addTracker.fulfilled, (state, action) => {
-            const existingTracker = state.trackers.find(tracker => tracker.token === action.payload.token);
-            if (!existingTracker) {
+            const existingTrackerIndex = state.trackers.findIndex(existingTracker => existingTracker.token === action.payload.token);
+            if (existingTrackerIndex !== -1) {
+                state.trackers[existingTrackerIndex] = action.payload;
+            } else {
                 state.trackers.push(action.payload);
             }
-            state.loading = false;
+            
+            state.loading = false;   
         });
         builder.addCase(addTracker.rejected, (state, action) => {
             state.loading = false;
