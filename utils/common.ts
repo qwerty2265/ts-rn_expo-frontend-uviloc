@@ -44,4 +44,13 @@ const parseCoordinates = (coordinatesString: string): CoordinatesType => {
     return { latitude: parseFloat(latitude), longitude: parseFloat(longitude) };
 };
 
-export { generateRandomString, convertUTCToLocalTime, parseCoordinates };
+const formatLastTimeSeen = (lastTimeSeen: TimeType | string): string => {
+    if (typeof lastTimeSeen === 'object') {
+        return `${lastTimeSeen.hours}:${lastTimeSeen.minutes} · ${lastTimeSeen.day}.${lastTimeSeen.month}.${lastTimeSeen.year}`;
+    } 
+    else {
+        return lastTimeSeen;
+    }
+}
+
+export { generateRandomString, convertUTCToLocalTime, parseCoordinates, formatLastTimeSeen };
