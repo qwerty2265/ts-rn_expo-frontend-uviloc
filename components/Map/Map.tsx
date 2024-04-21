@@ -3,10 +3,11 @@ import MapView, { Marker } from "react-native-maps";
 import { View, TouchableOpacity } from "react-native";
 import * as Location from 'expo-location';
 import { CustomActivityIndicator } from "../CustomActivityIndicator";
-import { useSelector } from "../../state/store";
+import { useDispatch, useSelector } from "../../state/store";
 import styles from "./map.style";
 import { COLORS, MAP_THEME, icons } from "../../constants";
 import { convertUTCToLocalTime, formatLastTimeSeen, parseCoordinates } from "../../utils/common";
+import { resetSelectedTracker } from "../../slices/selectedTrackerSlice";
 
 interface MapRegionState {
     latitude: number,
@@ -22,6 +23,9 @@ const Map = () => {
     const mapRef = useRef<MapView>(null);
     const userLocation = useSelector((state) => state.location.userLocation);
     const trackers = useSelector((state) => state.trackers.trackers);
+    const selectedTracker = useSelector((state) => state.selectedTracker);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const checkPermissionAndFetchLocation = async () => {
@@ -31,6 +35,20 @@ const Map = () => {
 
         checkPermissionAndFetchLocation();
     }, []);
+
+    useEffect(() => {
+        if (selectedTracker.selectedTrackerCoordinates && mapRef.current) {
+            if (followsUserLocation) setFollowsUserLocation(false);
+            const {latitude, longitude} = parseCoordinates(selectedTracker.selectedTrackerCoordinates);
+            mapRef.current.animateToRegion({
+                latitude: latitude,
+                longitude: longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.02,
+            }, 1000);
+            dispatch(resetSelectedTracker());
+        }
+    }, [selectedTracker]);
 
     useEffect(() => {
         if (!mapRegion && userLocation) {
@@ -49,13 +67,15 @@ const Map = () => {
                 latitude: userLocation.latitude,
                 longitude: userLocation.longitude,
                 latitudeDelta: 0.01,
-                longitudeDelta: 0.0,
+                longitudeDelta: 0.02,
             }, 1000);
         }
     }, [followsUserLocation, userLocation]);
 
     const handleToggleFollowUserLocation = () => {
         setFollowsUserLocation(!followsUserLocation);
+        console.log('cursor')
+        dispatch(resetSelectedTracker());
     };
 
     const handleRegionChangeComplete = () => {

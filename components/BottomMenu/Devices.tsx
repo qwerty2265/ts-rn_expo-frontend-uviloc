@@ -1,4 +1,4 @@
-import { ScrollView, Alert, View } from "react-native";
+import { ScrollView, Alert, View, TouchableOpacity } from "react-native";
 import styles from "./bottommenu.style";
 import Tracker from "../Tracker/Tracker";
 import { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import { calculateDistance } from "../../utils/coordinates";
 import { CustomActivityIndicator } from "../CustomActivityIndicator";
 import * as Location from 'expo-location';
 import CustomText from "../CustomText";
+import { setSelectedTracker } from "../../slices/selectedTrackerSlice";
 
 const Devices = () => {
     const { trackers, loading, error } = useSelector((state) => state.trackers);
@@ -58,6 +59,10 @@ const Devices = () => {
         }
     }, [accessToken, dispatch]);
 
+    const handleTrackerPress = (trackerId : number, coordinates: string) => {
+        dispatch(setSelectedTracker({selectedTrackerId: trackerId, selectedTrackerCoordinates: coordinates}));
+    }
+
     if (locationPermissionDenied) {
         return <CustomText style={{flex: 1, backgroundColor: COLORS.background}}>Permission to access location was denied</CustomText>
     }
@@ -81,14 +86,18 @@ const Devices = () => {
     return (
         <ScrollView style={styles.bottomMenuPage} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}>
             {trackers.map((tracker, index) => (
-                <View key={tracker.token} style={index !== 0 && { marginTop: SIZE.small }}>
+                <TouchableOpacity 
+                    key={tracker.token} 
+                    style={index !== 0 && { marginTop: SIZE.small }}
+                    onPress={() => handleTrackerPress(tracker.id, tracker.latest_geolocation.coordinates)}
+                >
                     <Tracker
                         name={tracker.name}
                         lastTimeSeen={convertUTCToLocalTime(tracker.latest_geolocation.created_at)}
                         location={''}
                         distance={calculateDistance(userLocation, parseCoordinates(`${tracker.latest_geolocation.coordinates}`) )}               
                     />
-                </View>
+                </TouchableOpacity>
             ))}
         </ScrollView>
     );
