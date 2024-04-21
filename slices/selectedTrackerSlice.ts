@@ -14,14 +14,18 @@ export const selectedTrackerSlice = createSlice({
 	name: 'selectedTracker',
 	initialState,
 	reducers: {
-		setSelectedTracker: (state, action: PayloadAction<TrackerData>) => {
+		setSelectedTracker(state, action: PayloadAction<TrackerData>) {
 			const { selectedTrackerId, selectedTrackerCoordinates } = action.payload;
 			state.selectedTrackerId = selectedTrackerId;
 			state.selectedTrackerCoordinates = selectedTrackerCoordinates;
 		},
+		resetSelectedTracker(state) {
+			state.selectedTrackerId = null;
+			state.selectedTrackerCoordinates = null;
+		}
 	},
 });
 
-export const { setSelectedTracker } = selectedTrackerSlice.actions;
+export const { setSelectedTracker, resetSelectedTracker } = selectedTrackerSlice.actions;
 
 export default selectedTrackerSlice.reducer;
