@@ -93,6 +93,9 @@ export const addTracker = createAsyncThunk<
                     }
                 }
             );
+
+            if (typeof geoResponse.data === 'string') return rejectWithValue(geoResponse.data);
+
             tracker.latest_geolocation = geoResponse.data;
             return tracker;
         } 
