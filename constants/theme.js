@@ -32,7 +32,7 @@ const Z_INDEX = {
     content_2: 20,
     content_3: 30,
     content_4: 40,
-    contant_5: 50,
+    content_5: 50,
 
     wrapper: 100,
 
