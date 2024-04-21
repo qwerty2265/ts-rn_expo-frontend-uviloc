@@ -1,7 +1,7 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, FONT, SIZE } from "../constants";
 import { useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Alert, TouchableOpacity, View } from "react-native";
 import CustomText from "../components/CustomText";
 import LabeledTextInput from "../components/LabeledTextInput";
 import axios from "axios";
@@ -37,10 +37,9 @@ function Auth({ navigation } : { navigation : NavigationProp<any>}) {
                 "username": username,
 				"password": password,
             });
-
 			if (response.data.access_token) {
-                const { access_token, ...userData } = response.data;
-
+                const { access_token, is_register, ...userData } = response.data;
+            
                 dispatch(login({userData, userToken: access_token}));
                 navigation.dispatch(
                     CommonActions.reset({
@@ -48,6 +47,13 @@ function Auth({ navigation } : { navigation : NavigationProp<any>}) {
                         routes: [{ name: 'home' }],
                     })
                 );
+
+                if (is_register) {
+                    Alert.alert("Register", "You're successfully registered!");
+                } 
+                else {
+                    Alert.alert("Login", "You have successfully logged in!");
+                }
 			} 
 			else {
 				console.error('Login failed: No access token received');
