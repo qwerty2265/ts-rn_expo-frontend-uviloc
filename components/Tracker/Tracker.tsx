@@ -10,7 +10,7 @@ interface TrackerProps {
     name: string,
     lastTimeSeen: TimeType | string,
     location:  string,
-    distance: number | string,
+    distance: string,
 }
 
 const Tracker: React.FC<TrackerProps> = ({ name, lastTimeSeen, location, distance }) => {

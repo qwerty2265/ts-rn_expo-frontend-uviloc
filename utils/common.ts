@@ -18,7 +18,7 @@ const convertUTCToLocalTime = (utcDateString: string): string | TimeType => {
 
     const differenceInMinutes = Math.floor((currentTime.getTime() - date.getTime()) / (1000 * 60));
 
-    if (differenceInMinutes < 1) {
+    if (differenceInMinutes < 3) {
         return 'Now';
     }
     else if (differenceInMinutes <= 60) {
