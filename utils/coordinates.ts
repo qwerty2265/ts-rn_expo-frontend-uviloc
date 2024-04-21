@@ -1,6 +1,6 @@
 import { CoordinatesType } from "../types/coordinates";
 
-function calculateDistance(coord1: CoordinatesType, coord2: CoordinatesType): number {
+function calculateDistance(coord1: CoordinatesType, coord2: CoordinatesType): number | string {
     const R = 6371; // Радиус Земли в километрах
     const lat1 = coord1.latitude;
     const lon1 = coord1.longitude;
@@ -15,6 +15,16 @@ function calculateDistance(coord1: CoordinatesType, coord2: CoordinatesType): nu
         Math.sin(dLon / 2) * Math.sin(dLon / 2); 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
     const distance = R * c; 
+
+    if (distance < 50) {
+        return 'With you';
+    }
+    else if (distance < 1000) {
+        return `${distance.toFixed(0)}m`;
+    } 
+    else {
+        return `${(distance / 1000).toFixed(1)}km`;
+    }
 
     return distance;
 }
