@@ -41,7 +41,7 @@ const convertUTCToLocalTime = (utcDateString: string): string | TimeType => {
 
 const parseCoordinates = (coordinatesString: string): CoordinatesType => {
     const [latitude, longitude] = coordinatesString.split(',');
-    return { latitude, longitude };
+    return { latitude: parseFloat(latitude), longitude: parseFloat(longitude) };
 };
 
 export { generateRandomString, convertUTCToLocalTime, parseCoordinates };
