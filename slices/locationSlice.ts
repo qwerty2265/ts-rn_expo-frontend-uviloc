@@ -9,7 +9,6 @@ export const fetchUserLocation = createAsyncThunk<
 >(
     'location/fetchUserLocation',
     async (_, { rejectWithValue }) => {
-		console.log('fsdfds');
         try {
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {

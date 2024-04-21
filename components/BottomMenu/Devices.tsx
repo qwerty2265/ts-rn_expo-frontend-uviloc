@@ -5,17 +5,29 @@ import { useEffect, useState } from "react";
 import { clearError, fetchTrackersByUserToken, resetTrackers } from "../../slices/trackerSlice";
 import { getData } from "../../utils/storage";
 import { useDispatch, useSelector } from "../../state/store";
-import { SIZE } from "../../constants";
+import { COLORS, SIZE } from "../../constants";
 import { convertUTCToLocalTime, parseCoordinates } from "../../utils/common";
 import { calculateDistance } from "../../utils/coordinates";
 import { CustomActivityIndicator } from "../CustomActivityIndicator";
+import * as Location from 'expo-location';
+import CustomText from "../CustomText";
 
 const Devices = () => {
     const { trackers, loading, error } = useSelector((state) => state.trackers);
     const userLocation = useSelector((state) => state.location.userLocation);
     const userData = useSelector((state) => state.auth.userData);
     const [accessToken, setAccessToken] = useState<string | null>(null);
+    const [locationPermissionDenied, setLocationPermissionDenied] = useState<boolean>(false);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        const checkPermissionAndFetchLocation = async () => {
+            let { status } = await Location.getForegroundPermissionsAsync();
+            if (status !== 'granted') setLocationPermissionDenied(true);
+        };
+
+        checkPermissionAndFetchLocation();
+    }, []);
 
     useEffect(() => {
         const fetchToken = async () => {
@@ -46,12 +58,15 @@ const Devices = () => {
         }
     }, [accessToken, dispatch]);
 
+    if (locationPermissionDenied) {
+        return <CustomText style={{flex: 1, backgroundColor: COLORS.background}}>Permission to access location was denied</CustomText>
+    }
+
     if (loading || !userLocation) {
         return <CustomActivityIndicator style={{ flex: 1}} size='small' />
     }
 
     if (error) {
-        console.log("Error received:", error);
         Alert.alert(
             "Error",
             `Error loading trackers: ${error}`,
