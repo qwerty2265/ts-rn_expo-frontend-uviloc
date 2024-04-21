@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import * as Location from 'expo-location';
 import { Text } from "react-native";
 import { MAP_THEME } from "../../constants";
+import { useDispatch, useSelector } from "../../state/store";
+import { fetchUserLocation } from "../../slices/locationSlice";
 
 interface MapRegionState {
     latitude: number,
@@ -22,28 +24,17 @@ const Map = () => {
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [locationPermissionDenied, setLocationPermissionDenied] = useState<boolean>(false);
     const [locationSubscription, setLocationSubscription] = useState<Location.LocationSubscription | null>(null);
-
-    const fetchCurrentLocation = async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-            setErrorMessage('Permission to access location was denied');
-            setLocationPermissionDenied(true);
-            return;
-        }
-
-        let location = await Location.getCurrentPositionAsync({accuracy: Location.LocationAccuracy.BestForNavigation});
-        setMapRegion(prevState => ({
-            ...prevState,
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-        }));
-    };
+    const userLocation = useSelector((state) => state.location.userLocation);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const checkPermissionAndFetchLocation = async () => {
             let { status } = await Location.getForegroundPermissionsAsync();
             if (status !== 'granted') {
-                fetchCurrentLocation();
+                setLocationPermissionDenied(true);
+            } 
+            else {
+                dispatch(fetchUserLocation());
             }
         };
 
@@ -63,7 +54,7 @@ const Map = () => {
     }, [locationPermissionDenied]);
 
     useEffect(() => {
-        if (!locationPermissionDenied) {
+        if (!locationPermissionDenied && userLocation) {
             let subscription: Location.LocationSubscription | null = null;
             Location.watchPositionAsync(
                 { accuracy: Location.LocationAccuracy.BestForNavigation, timeInterval: 5000, distanceInterval: 10 },
@@ -87,7 +78,7 @@ const Map = () => {
                 }
             };
         }
-    }, [locationPermissionDenied]);
+    }, [locationPermissionDenied, userLocation]);
     
     if (locationPermissionDenied) {
         return <Text>{errorMessage}</Text>;
@@ -98,7 +89,7 @@ const Map = () => {
             region={mapRegion}
             customMapStyle={MAP_THEME}
             >
-        <Marker coordinate={{ latitude: mapRegion.latitude, longitude: mapRegion.longitude }} title="You"/>
+            {userLocation && <Marker coordinate={{ latitude: userLocation.latitude, longitude: userLocation.longitude }} title="You"/>}
         </MapView>
     )
 }

@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import trackerReducer from '../slices/trackerSlice';
 import authReducer from '../slices/authSlice';
+import locationReducer from '../slices/locationSlice';
 import { TypedUseSelectorHook, useDispatch as reduxUseDispatch, useSelector as reduxUseSelector  } from 'react-redux';
 
 export const store = configureStore({
     reducer: {
         trackers: trackerReducer,
         auth: authReducer,
+        location: locationReducer,
     },
 });
 
