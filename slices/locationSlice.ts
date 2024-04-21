@@ -26,6 +26,23 @@ export const fetchUserLocation = createAsyncThunk<
     }
 );
 
+export const setUserLocation = createAsyncThunk<
+    CoordinatesType,
+    CoordinatesType,
+    { rejectValue: string }
+>(
+    'location/setUserLocation',
+    async (userLocation: CoordinatesType, { rejectWithValue }) => {
+        try {
+            return userLocation;
+        } catch (error) {
+            console.log(error);
+            return rejectWithValue('Failed to set user location');
+        }
+    }
+);
+
+
 interface LocationState {
     userLocation: CoordinatesType | null;
     loading: boolean;
@@ -53,6 +70,14 @@ const locationSlice = createSlice({
             state.userLocation = action.payload;
         })
         .addCase(fetchUserLocation.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        })
+        .addCase(setUserLocation.fulfilled, (state, action) => {
+            state.loading = false;
+            state.userLocation = action.payload;
+        })
+        .addCase(setUserLocation.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
         });
