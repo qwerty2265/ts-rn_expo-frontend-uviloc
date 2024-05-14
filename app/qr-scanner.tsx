@@ -1,6 +1,6 @@
 import CustomText from "../components/CustomText";
 import { COLORS, Z_INDEX, icons } from "../constants";
-import { CameraView, useCameraPermissions } from 'expo-camera/next'
+import { CameraView, useCameraPermissions } from "expo-camera";
 import React, { useEffect, useState } from "react";
 import { Alert, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
