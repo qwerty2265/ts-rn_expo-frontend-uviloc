@@ -45,7 +45,9 @@
         {
           "cameraPermission": "Allow Uviloc to access your camera"
         }
-      ]
+      ],
+      "expo-font",
+      "expo-router"
     ]
   }
 }
