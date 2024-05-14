@@ -5,6 +5,9 @@ import { RootState, useDispatch, useSelector } from "../state/store";
 import { useEffect } from "react";
 import { View } from "react-native";
 import { fetchUserLocation } from "../slices/locationSlice";
+import { getData } from "../utils/storage";
+import { UserData } from "../types/user";
+import { login } from "../slices/authSlice";
 
 const Home = () => {
     const trackers = useSelector((state) => state.trackers.trackers);
@@ -14,6 +17,16 @@ const Home = () => {
     useEffect(() => {}, [trackers]);
 
     useEffect(() => {dispatch(fetchUserLocation())}, []);
+
+    useEffect(() => {
+        const checkToken = async () => {
+            const storedUserData = await getData('user_data') as UserData;
+            
+            if (storedUserData && storedUserData.accessToken) dispatch(login({userData: storedUserData, userToken: storedUserData.accessToken}))
+        }
+
+        checkToken();
+    }, [])
     
     return (
         <View style={{backgroundColor: COLORS.background, flex: 1}}>
