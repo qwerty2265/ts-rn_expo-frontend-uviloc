@@ -1,7 +1,7 @@
-import { ScrollView, Alert, View, TouchableOpacity } from "react-native";
+import { ScrollView, Alert, View, TouchableOpacity, Platform } from "react-native";
 import styles from "./bottommenu.style";
 import Tracker from "../Tracker/Tracker";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { clearError, fetchTrackersByUserToken, resetTrackers } from "../../slices/trackerSlice";
 import { getData } from "../../utils/storage";
 import { useDispatch, useSelector } from "../../state/store";
@@ -12,6 +12,8 @@ import { CustomActivityIndicator } from "../CustomActivityIndicator";
 import * as Location from 'expo-location';
 import CustomText from "../CustomText";
 import { setSelectedTracker } from "../../slices/selectedTrackerSlice";
+import { registerForPushNotificationsAsync, schedulePushNotification } from "../../utils/notifications"; // Import the refactored function
+import * as Notifications from 'expo-notifications';
 
 const Devices = () => {
     const { trackers, loading, error } = useSelector((state) => state.trackers);
@@ -19,21 +21,57 @@ const Devices = () => {
     const userData = useSelector((state) => state.auth.userData);
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [locationPermissionDenied, setLocationPermissionDenied] = useState<boolean>(false);
+    const notificationListener = useRef<Notifications.Subscription>();
+    const responseListener = useRef<Notifications.Subscription>();
+
     const dispatch = useDispatch();
 
+    // Notifications logic
+    
     useEffect(() => {
-        const checkPermissionAndFetchLocation = async () => {
-            let { status } = await Location.getForegroundPermissionsAsync();
-            if (status !== 'granted') setLocationPermissionDenied(true);
+        registerForPushNotificationsAsync(); // Register for push notifications
+    
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            // Handle received notification
+            console.log("Notification received:", notification);
+        });
+    
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+            // Handle notification response
+            console.log("Notification response received:", response);
+        });
+    
+        return () => {
+            notificationListener.current &&
+                Notifications.removeNotificationSubscription(notificationListener.current);
+            responseListener.current &&
+                Notifications.removeNotificationSubscription(responseListener.current);
         };
-
-        checkPermissionAndFetchLocation();
     }, []);
+
+    useEffect(() => {
+        if (trackers.length > 0) {
+            trackers.forEach(tracker => {
+                const lastTimeSeen = new Date(tracker.latest_geolocation.created_at);
+                const currentTime = new Date();
+                const differenceInMinutes = (currentTime.getTime() - lastTimeSeen.getTime()) / (1000 * 60);
+                
+                if (differenceInMinutes > 60) {
+                    schedulePushNotification({
+                        title: `Tracker ${tracker.name} Disconnected`,
+                        body: `The tracker ${tracker.name} hasn't been seen for over an hour.`,
+                        data: { trackerId: tracker.id }
+                    });
+                }
+            });
+        }
+    }, [trackers]);
+
+    // Trackers logic
 
     useEffect(() => {
         const fetchToken = async () => {
             const access_token = await getData('access_token');
-            console.log(accessToken)
             if (typeof access_token === 'string' || access_token === null) {
                 setAccessToken(access_token);
             } else {
@@ -59,16 +97,28 @@ const Devices = () => {
         }
     }, [accessToken, dispatch]);
 
-    const handleTrackerPress = (trackerId : number, coordinates: string) => {
-        dispatch(setSelectedTracker({selectedTrackerId: trackerId, selectedTrackerCoordinates: coordinates}));
+    const handleTrackerPress = (trackerId: number, coordinates: string) => {
+        dispatch(setSelectedTracker({ selectedTrackerId: trackerId, selectedTrackerCoordinates: coordinates }));
     }
+
+    // everything else
+
+    useEffect(() => {
+        const checkPermissionAndFetchLocation = async () => {
+            let { status } = await Location.getForegroundPermissionsAsync();
+            if (status !== 'granted') setLocationPermissionDenied(true);
+        };
+
+        checkPermissionAndFetchLocation();
+    }, []);
+
 
     if (locationPermissionDenied) {
         return <CustomText style={{flex: 1, backgroundColor: COLORS.background}}>Permission to access location was denied</CustomText>
     }
 
     if (loading || !userLocation) {
-        return <CustomActivityIndicator style={{ flex: 1}} size='small' />
+        return <CustomActivityIndicator style={{ flex: 1 }} size='small' />
     }
 
     if (error) {
