@@ -1,4 +1,4 @@
-# ts-rn_expo-template
+# ts-rn_expo-frontend-uviloc
 
 ## npm
 ```
