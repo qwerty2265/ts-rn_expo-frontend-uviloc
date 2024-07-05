@@ -133,24 +133,37 @@ const Devices = () => {
         );
     }
 
-    return (
-        <ScrollView style={styles.bottomMenuPage} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}>
-            {trackers.map((tracker, index) => (
-                <TouchableOpacity 
-                    key={tracker.token} 
-                    style={index !== 0 && { marginTop: SIZE.small }}
-                    onPress={() => handleTrackerPress(tracker.id, tracker.latest_geolocation.coordinates)}
-                >
-                    <Tracker
-                        name={tracker.name}
-                        lastTimeSeen={convertUTCToLocalTime(tracker.latest_geolocation.created_at)}
-                        location={''}
-                        distance={calculateDistance(userLocation, parseCoordinates(`${tracker.latest_geolocation.coordinates}`) )}               
-                    />
-                </TouchableOpacity>
-            ))}
-        </ScrollView>
-    );
+    switch(trackers.length > 0) {
+        case true:
+            return (
+                <ScrollView style={styles.bottomMenuPage} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}>
+                    {trackers.map((tracker, index) => (
+                        <TouchableOpacity 
+                            key={tracker.token} 
+                            style={index !== 0 && { marginTop: SIZE.small }}
+                            onPress={() => handleTrackerPress(tracker.id, tracker.latest_geolocation.coordinates)}
+                        >
+                            <Tracker
+                                name={tracker.name}
+                                lastTimeSeen={convertUTCToLocalTime(tracker.latest_geolocation.created_at)}
+                                location={''}
+                                distance={calculateDistance(userLocation, parseCoordinates(`${tracker.latest_geolocation.coordinates}`) )}               
+                            />
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
+            );
+        case false:
+            return (
+                <View style={styles.bottomMenuPage}>
+                    <CustomText style={{ margin: 'auto' }} color={COLORS.primary} size={SIZE.small}> 
+                        You don't have any connected trackers 
+                    </CustomText>
+                </View>
+            )
+    }
+
+
 }
 
 export default Devices;
