@@ -7,6 +7,7 @@ interface TrackerType {
     created_at: string;
     updated_at: string;
     latest_geolocation: TrackerGeolocationType;
+    geolocations?: TrackerGeolocationType[];
 }
 
 interface TrackerGeolocationType {
