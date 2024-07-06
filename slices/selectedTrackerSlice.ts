@@ -1,13 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface TrackerData {
-	selectedTrackerId: number | null;
-	selectedTrackerCoordinates: string | null;
+	selectedTrackerId: number;
+	selectedTrackerName: string;
+	selectedTrackerCoordinates: string;
 }
 
 const initialState: TrackerData = {
-	selectedTrackerId: null,
-	selectedTrackerCoordinates: null,
+	selectedTrackerId: 0,
+	selectedTrackerName: '',
+	selectedTrackerCoordinates: '',
 };
 
 export const selectedTrackerSlice = createSlice({
@@ -15,13 +17,15 @@ export const selectedTrackerSlice = createSlice({
 	initialState,
 	reducers: {
 		setSelectedTracker(state, action: PayloadAction<TrackerData>) {
-			const { selectedTrackerId, selectedTrackerCoordinates } = action.payload;
+			const { selectedTrackerId, selectedTrackerName, selectedTrackerCoordinates } = action.payload;
 			state.selectedTrackerId = selectedTrackerId;
+			state.selectedTrackerName = selectedTrackerName;
 			state.selectedTrackerCoordinates = selectedTrackerCoordinates;
 		},
 		resetSelectedTracker(state) {
-			state.selectedTrackerId = null;
-			state.selectedTrackerCoordinates = null;
+			state.selectedTrackerId = 0;
+			state.selectedTrackerName = '';
+			state.selectedTrackerCoordinates = '';
 		}
 	},
 });
