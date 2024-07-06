@@ -48,6 +48,49 @@ export const fetchTrackersByUserToken = createAsyncThunk<
     }
 );
 
+export const fetchTrackerGeolocationsByUserToken = createAsyncThunk<
+    TrackerType[],
+    { access_token: string },
+    { rejectValue: string }
+>(
+    'trackers/fetchGeolocationsByUserToken',
+    async ({ access_token }: { access_token: string }, { rejectWithValue }) => {
+        if (!access_token) return rejectWithValue('Access_token variable is not filled');
+
+        try {
+            const trackersResponse = await axios.get<TrackerType[]>(`${apiUrl}/api/trackers/get-by-access-token`, {
+                headers: {
+                    Authorization: `Bearer ${access_token}`
+                }
+            });
+
+            const trackers = trackersResponse.data;
+
+            const enrichedTrackers: TrackerType[] = await Promise.all(trackers.map(async (tracker) => {
+                const geoResponse = await axios.get<TrackerGeolocationType[]>(`${apiUrl}/api/geolocations/get-all-by-tracker-token`, {
+                    headers: {
+                        Authorization: `Bearer ${access_token}`
+                    },
+                    params: {
+                        tracker_token: tracker.token
+                    }
+                });
+                tracker.geolocations = geoResponse.data;
+                return tracker;
+            }));
+
+            return enrichedTrackers;
+        } 
+        catch (error) {
+            console.log(error);
+            if (axios.isAxiosError(error)) {
+                return rejectWithValue(`${error.response?.data}`);
+            }
+            return rejectWithValue('An unexpected error occurred');
+        }
+    }
+);
+
 export const addTracker = createAsyncThunk<
     TrackerType,
     { tracker_name?: string; access_token: string; tracker_token: string },
@@ -161,6 +204,7 @@ const trackerSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         });
+
         builder.addCase(addTracker.pending, (state) => {
             state.loading = true;
         });
@@ -175,6 +219,28 @@ const trackerSlice = createSlice({
             state.loading = false;   
         });
         builder.addCase(addTracker.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        });
+
+        builder.addCase(fetchTrackerGeolocationsByUserToken.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        });
+        builder.addCase(fetchTrackerGeolocationsByUserToken.fulfilled, (state, action) => {
+            action.payload.forEach(newTracker => {
+                const existingTrackerIndex = state.trackers.findIndex(existingTracker => existingTracker.token === newTracker.token);
+                if (existingTrackerIndex !== -1) {
+                    state.trackers[existingTrackerIndex] = {
+                        ...state.trackers[existingTrackerIndex],
+                        geolocations: newTracker.geolocations,
+                        latest_geolocation: state.trackers[existingTrackerIndex].latest_geolocation 
+                    };
+                }
+            });
+            state.loading = false;       
+        });
+        builder.addCase(fetchTrackerGeolocationsByUserToken.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
         });
