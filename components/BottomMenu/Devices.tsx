@@ -14,6 +14,7 @@ import CustomText from "../CustomText";
 import { setSelectedTracker } from "../../slices/selectedTrackerSlice";
 import { registerForPushNotificationsAsync, schedulePushNotification } from "../../utils/notifications"; // Import the refactored function
 import * as Notifications from 'expo-notifications';
+import { useNavigation } from "expo-router";
 
 const Devices = () => {
     const { trackers, loading, error } = useSelector((state) => state.trackers);
@@ -25,6 +26,7 @@ const Devices = () => {
     const responseListener = useRef<Notifications.Subscription>();
 
     const dispatch = useDispatch();
+    const navigation = useNavigation();
 
     // Notifications logic
     
@@ -97,8 +99,10 @@ const Devices = () => {
         }
     }, [accessToken, dispatch]);
 
-    const handleTrackerPress = (trackerId: number, coordinates: string) => {
-        dispatch(setSelectedTracker({ selectedTrackerId: trackerId, selectedTrackerCoordinates: coordinates }));
+    const handleTrackerPress = (trackerId: number, trackerName: string, coordinates: string) => {
+        dispatch(setSelectedTracker({ selectedTrackerId: trackerId, selectedTrackerName: trackerName, selectedTrackerCoordinates: coordinates }));
+        // @ts-expect-error
+        navigation.navigate('trackerDetails', { id: trackerId });
     }
 
     // everything else
@@ -141,7 +145,7 @@ const Devices = () => {
                         <TouchableOpacity 
                             key={tracker.token} 
                             style={index !== 0 && { marginTop: SIZE.small }}
-                            onPress={() => handleTrackerPress(tracker.id, tracker.latest_geolocation.coordinates)}
+                            onPress={() => handleTrackerPress(tracker.id, tracker.name, tracker.latest_geolocation.coordinates)}
                         >
                             <Tracker
                                 name={tracker.name}
