@@ -114,11 +114,11 @@ const Map = () => {
                 loadingEnabled={true}
                 onRegionChangeComplete={handleRegionChangeComplete}
             >
-                {trackers.map((tracker) => (
+                {trackers.length > 0 && trackers.map((tracker) => (
                     <Marker
                         key={tracker.token}
                         coordinate={parseCoordinates(tracker.latest_geolocation.coordinates)}
-                        title={tracker.name}   
+                        title={tracker.name}
                     >
                         <icons.tracker
                             height={30}
