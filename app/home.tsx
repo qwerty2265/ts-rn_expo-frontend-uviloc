@@ -22,7 +22,7 @@ const Home = () => {
         const checkToken = async () => {
             const storedUserData = await getData('user_data') as UserData;
             
-            if (storedUserData && storedUserData.accessToken) dispatch(login({userData: storedUserData, userToken: storedUserData.accessToken}))
+            if (storedUserData) dispatch(login({userData: storedUserData}))
         }
 
         checkToken();

@@ -19,15 +19,15 @@ import { TrackerType } from "../../types/tracker";
 
 const Devices = () => {
     const { trackers, loading, error } = useSelector((state) => state.trackers);
-    const userLocation = useSelector((state) => state.location.userLocation);
-    const userData = useSelector((state) => state.auth.userData);
-    const [accessToken, setAccessToken] = useState<string | null>(null);
+    const userLocation = useSelector((state) => state.location.userLocation);;
     const [locationPermissionDenied, setLocationPermissionDenied] = useState<boolean>(false);
     const notificationListener = useRef<Notifications.Subscription>();
     const responseListener = useRef<Notifications.Subscription>();
 
     const dispatch = useDispatch();
     const navigation = useNavigation();
+
+    const accessToken = useSelector((state) => state.auth.userData?.access_token );
 
     // Notifications logic
     
@@ -73,27 +73,13 @@ const Devices = () => {
     // Trackers logic
 
     useEffect(() => {
-        const fetchToken = async () => {
-            const access_token = await getData('access_token');
-            if (typeof access_token === 'string' || access_token === null) {
-                setAccessToken(access_token);
-            } else {
-                console.error("Received non-string access token:", access_token);
-            }
-        };
-        fetchToken();
-    }, [userData]);
-
-    useEffect(() => {
-        dispatch(resetTrackers());
-    }, [userData, dispatch]);
-
-    useEffect(() => {
+        console.log(accessToken)
         if (accessToken) {
             dispatch(fetchTrackersByUserToken({ access_token: accessToken }));
 
             const intervalId = setInterval(() => {
                 dispatch(fetchTrackersByUserToken({ access_token: accessToken }));
+                console.log(2);
             }, 20000);
     
             return () => clearInterval(intervalId);
@@ -103,7 +89,7 @@ const Devices = () => {
     const handleTrackerPress = (tracker: TrackerType) => {
         dispatch(setSelectedTracker({ selectedTrackerId: tracker.id, selectedTrackerName: tracker.name, selectedTrackerCoordinates: tracker.latest_geolocation.coordinates }));
         // @ts-expect-error
-        navigation.navigate('trackerDetails', { id: tracker.id });
+        navigation.navigate('trackerDetails', { id: tracker.id, trackerToken: tracker.token});
     }
 
     // everything else
