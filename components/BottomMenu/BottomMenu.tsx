@@ -6,11 +6,14 @@ import { useNavigation } from "@react-navigation/native";
 import { Platform, Pressable, View, ViewStyle } from "react-native";
 import { COLORS, icons } from "../../constants";
 import Profile from "./Profile";
+import TrackerDetails from "./tracker-details/[id]";
+import { useSelector } from "../../state/store";
 
 const Tab = createBottomTabNavigator();
 
 const BottomMenu = () => {
     const navigation = useNavigation();
+    const selectedTracker = useSelector((state) => state.selectedTracker);
 
     const headerRightStyle = Platform.select<ViewStyle>({
         ios: {
@@ -24,7 +27,6 @@ const BottomMenu = () => {
             right: 10,
         },
     });
-    
     return (
         <View style={styles.bottomMenu} >
             <BottomMenuNavigator>
@@ -50,6 +52,13 @@ const BottomMenu = () => {
                 name='devices' 
                 component={Devices} />
                 <Tab.Screen name='profile' component={Profile} />
+                <Tab.Screen 
+                    name='trackerDetails' 
+                    component={TrackerDetails} 
+                    options={{
+                        tabBarButton: () => {return null},
+                        headerTitle: selectedTracker.selectedTrackerName
+                    }} />
             </BottomMenuNavigator>
         </View>
     )
