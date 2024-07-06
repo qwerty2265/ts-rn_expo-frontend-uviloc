@@ -11,12 +11,11 @@ export const loadUserData = createAsyncThunk<UserData | null>('auth/loadUserData
     return storedUserData as UserData | null;
 });
 
-export const login = createAsyncThunk<UserData, { userData: UserData, userToken: string }>(
+export const login = createAsyncThunk<UserData, { userData: UserData  }>(
     'auth/login',
-    async ({ userData, userToken }) => {
+    async ({ userData }) => {
         await Promise.all([
             storeData({ key: 'user_data', value: userData }),
-            storeData({ key: 'access_token', value: userToken })
         ]);
         return userData;
     }
@@ -25,7 +24,6 @@ export const login = createAsyncThunk<UserData, { userData: UserData, userToken:
 export const logout = createAsyncThunk<null>('auth/logout', async () => {
     await Promise.all([
         removeData('user_data'),
-        removeData('access_token')
     ]);
     return null;
 });

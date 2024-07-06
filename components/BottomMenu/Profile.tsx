@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { CustomActivityIndicator } from "../CustomActivityIndicator";
 import { getData } from "../../utils/storage";
 import { UserData } from "../../types/user";
+import { resetTrackers } from "../../slices/trackerSlice";
 
 const Profile = ({ navigation } : { navigation : NavigationProp<any> }) => {
     const dispatch = useDispatch();
@@ -30,6 +31,7 @@ const Profile = ({ navigation } : { navigation : NavigationProp<any> }) => {
 
 	const handleLogout = async () => {
         dispatch((logout()));
+        dispatch(resetTrackers());
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,

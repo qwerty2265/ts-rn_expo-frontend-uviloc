@@ -38,9 +38,9 @@ function Auth({ navigation } : { navigation : NavigationProp<any>}) {
 				"password": password,
             });
 			if (response.data.access_token) {
-                const { access_token, is_register, ...userData } = response.data;
+                const { is_register, ...userData } = response.data;
             
-                dispatch(login({userData, userToken: access_token}));
+                dispatch(login({userData}));
                 navigation.dispatch(
                     CommonActions.reset({
                         index: 0,
