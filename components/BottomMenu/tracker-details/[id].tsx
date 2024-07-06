@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { COLORS } from "../../constants";
+import { COLORS } from "../../../constants";
 import styles from "./trackerdetails.style";
 
 const TrackerDetails = () => {

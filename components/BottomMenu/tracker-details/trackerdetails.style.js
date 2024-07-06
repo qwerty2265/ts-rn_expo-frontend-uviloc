@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { COLORS, Z_INDEX } from "../../constants";
+import { COLORS, Z_INDEX } from "../../../constants";
 
 const styles = StyleSheet.create({
     trackerDetailsMenu: {
