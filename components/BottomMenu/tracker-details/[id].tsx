@@ -1,11 +1,11 @@
 import { View } from "react-native";
-import { COLORS } from "../../../constants";
-import styles from "./trackerdetails.style";
+import { COLORS, Z_INDEX } from "../../../constants";
+import styles from "../bottommenu.style";
 
 const TrackerDetails = () => {
     return (
-        <View style={styles.trackerDetailsMenu}>
-            <View style={styles.trackerDetailsMenuPage}>
+        <View style={[styles.bottomMenu, {zIndex: Z_INDEX.content_2}]}>
+            <View style={styles.bottomMenuPage}>
 
             </View>
         </View>
