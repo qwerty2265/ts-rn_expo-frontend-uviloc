@@ -47,9 +47,9 @@ const BottomMenu = () => {
                         </Pressable>
                     ),
                 }}
-                name='Devices' 
+                name='devices' 
                 component={Devices} />
-                <Tab.Screen name='Profile' component={Profile} />
+                <Tab.Screen name='profile' component={Profile} />
             </BottomMenuNavigator>
         </View>
     )

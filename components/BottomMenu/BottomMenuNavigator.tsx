@@ -61,10 +61,10 @@ const BottomMenuNavigator: React.FC<BottomMenuNavigatorProps> = ({ children }) =
                 let tabColor = focused ? COLORS.accent : COLORS.text;
 
                 switch(route.name) {
-                    case 'Devices':
+                    case 'devices':
                         iconComponent = <icons.devices width={size} height={size} fill={tabColor} /> 
                         break;
-                    case 'Profile':
+                    case 'profile':
                         iconComponent = <icons.profile width={size} height={size} fill={tabColor} /> 
                         break;
                     default:
