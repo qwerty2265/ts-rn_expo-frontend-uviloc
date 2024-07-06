@@ -1,9 +1,9 @@
 export interface UserData {
     username: string;
     name: string;
-    phoneNumber: string;
+    phone_number: string;
     email: string;
-    accessToken?: string;
+    access_token: string;
 }
 
 export interface AuthContextType {
