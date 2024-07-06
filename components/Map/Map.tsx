@@ -8,6 +8,7 @@ import styles from "./map.style";
 import { COLORS, MAP_THEME, icons } from "../../constants";
 import { convertUTCToLocalTime, formatLastTimeSeen, parseCoordinates } from "../../utils/common";
 import { resetSelectedTracker } from "../../slices/selectedTrackerSlice";
+import { useNavigation } from "expo-router";
 
 interface MapRegionState {
     latitude: number,
@@ -26,6 +27,7 @@ const Map = () => {
     const selectedTracker = useSelector((state) => state.selectedTracker);
 
     const dispatch = useDispatch();
+    const navigation = useNavigation();
 
     useEffect(() => {
         const checkPermissionAndFetchLocation = async () => {
@@ -46,7 +48,6 @@ const Map = () => {
                 latitudeDelta: 0.01,
                 longitudeDelta: 0.02,
             }, 1000);
-            dispatch(resetSelectedTracker());
         }
     }, [selectedTracker]);
 
@@ -74,7 +75,8 @@ const Map = () => {
 
     const handleToggleFollowUserLocation = () => {
         setFollowsUserLocation(!followsUserLocation);
-        console.log('cursor')
+        // @ts-expect-error
+        navigation.navigate('devices');
         dispatch(resetSelectedTracker());
     };
 
