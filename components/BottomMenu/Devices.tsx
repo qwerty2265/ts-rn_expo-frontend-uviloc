@@ -73,13 +73,11 @@ const Devices = () => {
     // Trackers logic
 
     useEffect(() => {
-        console.log(accessToken)
         if (accessToken) {
             dispatch(fetchTrackersByUserToken({ access_token: accessToken }));
 
             const intervalId = setInterval(() => {
                 dispatch(fetchTrackersByUserToken({ access_token: accessToken }));
-                console.log(2);
             }, 20000);
     
             return () => clearInterval(intervalId);
