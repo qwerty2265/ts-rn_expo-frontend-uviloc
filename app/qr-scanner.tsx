@@ -15,29 +15,17 @@ interface QrScannerProps {
 function QrScanner({ navigation } : QrScannerProps) {
     const [permission, requestPermission] = useCameraPermissions();
     const [scannedResult, setScannedResult] = useState<string | null>(null);
-    const [accessToken, setAccessToken] = useState<string | null>(null);
-    const userData = useSelector((state) => state.auth.userData);
+    const access_token = useSelector((state) => state.auth.userData?.access_token );
 
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        const fetchToken = async () => {
-            const access_token = await getData('access_token');
-            if (typeof access_token === 'string' || access_token === null) {
-                setAccessToken(access_token);
-            } else {
-                console.error("Received non-string access token:", access_token);
-            }
-        };
-        fetchToken();
-    }, [userData]);
+    
 
     useEffect(() => {
         requestPermission();
     }, []);
 
     useEffect(() => {
-        if (scannedResult === null || accessToken === null) return
+        if (scannedResult === null || !access_token) return
         Alert.prompt(
             'Enter tracker name',
             'Tracker name',
@@ -45,7 +33,7 @@ function QrScanner({ navigation } : QrScannerProps) {
                 {
                     text: 'Submit',
                     onPress: (trackerName) => {
-                        dispatch(addTracker({ tracker_name: trackerName, access_token: accessToken, tracker_token: scannedResult }));
+                        dispatch(addTracker({ tracker_name: trackerName, access_token: access_token, tracker_token: scannedResult }));
                     }
                 }
             ]
