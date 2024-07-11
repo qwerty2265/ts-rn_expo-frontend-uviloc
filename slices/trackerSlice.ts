@@ -193,7 +193,11 @@ const trackerSlice = createSlice({
             action.payload.forEach(newTracker => {
                 const existingTrackerIndex = state.trackers.findIndex(existingTracker => existingTracker.token === newTracker.token);
                 if (existingTrackerIndex !== -1) {
-                    state.trackers[existingTrackerIndex] = newTracker;
+                    state.trackers[existingTrackerIndex] = {
+                        ...state.trackers[existingTrackerIndex],
+                        ...action.payload,
+                        geolocations: state.trackers[existingTrackerIndex].geolocations
+                    };
                 } else {
                     state.trackers.push(newTracker);
                 }
