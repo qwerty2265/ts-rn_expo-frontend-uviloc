@@ -17,10 +17,19 @@ import * as Notifications from 'expo-notifications';
 import { useNavigation } from "expo-router";
 import { TrackerType } from "../../types/tracker";
 
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+    }),
+});
+
 const Devices = () => {
     const { trackers, loading, error } = useSelector((state) => state.trackers);
     const userLocation = useSelector((state) => state.location.userLocation);;
     const [locationPermissionDenied, setLocationPermissionDenied] = useState<boolean>(false);
+    const [notifiedTrackers, setNotifiedTrackers] = useState<Set<number>>(new Set());
     const notificationListener = useRef<Notifications.Subscription>();
     const responseListener = useRef<Notifications.Subscription>();
 
@@ -33,16 +42,6 @@ const Devices = () => {
     
     useEffect(() => {
         registerForPushNotificationsAsync(); // Register for push notifications
-    
-        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-            // Handle received notification
-            console.log("Notification received:", notification);
-        });
-    
-        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-            // Handle notification response
-            console.log("Notification response received:", response);
-        });
     
         return () => {
             notificationListener.current &&
@@ -59,16 +58,18 @@ const Devices = () => {
                 const currentTime = new Date();
                 const differenceInMinutes = (currentTime.getTime() - lastTimeSeen.getTime()) / (1000 * 60);
                 
-                if (differenceInMinutes > 60) {
+                if (differenceInMinutes > 1 && !notifiedTrackers.has(tracker.id)) {
                     schedulePushNotification({
                         title: `Tracker ${tracker.name} Disconnected`,
                         body: `The tracker ${tracker.name} hasn't been seen for over an hour.`,
                         data: { trackerId: tracker.id }
                     });
+
+                    setNotifiedTrackers(prevState => new Set(prevState).add(tracker.id));
                 }
             });
         }
-    }, [trackers]);
+    }, [trackers, notifiedTrackers]);
 
     // Trackers logic
 
