@@ -112,7 +112,7 @@ const Map = () => {
                 customMapStyle={MAP_THEME}
                 showsUserLocation={true}
                 userLocationUpdateInterval={10000}
-                showsMyLocationButton={true}
+                showsMyLocationButton={false}
                 loadingEnabled={true}
                 onRegionChangeComplete={handleRegionChangeComplete}
             >
