@@ -7,8 +7,9 @@ import { useDispatch, useSelector } from "../../state/store";
 import styles from "./map.style";
 import { COLORS, MAP_THEME, icons } from "../../constants";
 import { convertUTCToLocalTime, formatLastTimeSeen, parseCoordinates } from "../../utils/common";
-import { resetSelectedTracker } from "../../slices/selectedTrackerSlice";
+import { resetSelectedTracker, setSelectedTracker } from "../../slices/selectedTrackerSlice";
 import { useNavigation } from "expo-router";
+import { TrackerGeolocationType } from "../../types/tracker";
 
 interface MapRegionState {
     latitude: number,
@@ -25,6 +26,8 @@ const Map = () => {
     const userLocation = useSelector((state) => state.location.userLocation);
     const trackers = useSelector((state) => state.trackers.trackers);
     const selectedTracker = useSelector((state) => state.selectedTracker);
+
+    const [trackerGeolocations, setTrackerGeolocations] = useState<TrackerGeolocationType[]>([]);
 
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -48,6 +51,11 @@ const Map = () => {
                 latitudeDelta: 0.01,
                 longitudeDelta: 0.02,
             }, 1000);
+
+            const tracker = trackers.find(tracker => tracker.id === selectedTracker.selectedTrackerId);
+            if (tracker?.geolocations) {
+                setTrackerGeolocations(tracker.geolocations);
+            }
         }
     }, [selectedTracker]);
 
@@ -77,6 +85,7 @@ const Map = () => {
         setFollowsUserLocation(!followsUserLocation);
         // @ts-expect-error
         navigation.navigate('devices');
+        setTrackerGeolocations([]);
         dispatch(resetSelectedTracker());
     };
 
@@ -129,6 +138,17 @@ const Map = () => {
                         />
                     </Marker>
                 ))}
+
+                {trackerGeolocations.length > 0 && trackerGeolocations.slice(0, -1).reverse().map((geolocation, index) => (
+                    <Marker
+                        key={`${geolocation.id}-${index}`}
+                        coordinate={parseCoordinates(geolocation.coordinates)}
+                        title={`${index + 1}`}
+                        description={`Last seen: ${convertUTCToLocalTime(geolocation.created_at)}`}
+                    />
+                ))}
+
+                
             </MapView>
             <TouchableOpacity 
                 style={styles.userFollowButton}
