@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { ScrollView, Alert } from "react-native";
+import { ScrollView, Alert, View } from "react-native";
 import { COLORS, SIZE, Z_INDEX } from "../../../constants";
 import styles from "../bottommenu.style";
 import { RouteProp, useRoute } from "@react-navigation/native";
@@ -42,9 +42,11 @@ const TrackerDetails = () => {
 
     if (!geolocations) {
         return (
-            <CustomText style={{ margin: 'auto' }} color={COLORS.primary} size={SIZE.small}> 
-                 Tracker has no geolocation history
-            </CustomText>
+            <View style={styles.bottomMenuPage}>
+                <CustomText style={{ margin: 'auto' }} color={COLORS.primary} size={SIZE.small}> 
+                    Tracker has no geolocation history
+                </CustomText>
+            </View>
         );
     }
 
@@ -62,7 +64,7 @@ const TrackerDetails = () => {
 
     return (
         <ScrollView style={styles.bottomMenuPage} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100, zIndex: Z_INDEX.content_2 }}>
-            {geolocations.slice().reverse().map((geolocation, index) => (
+            {geolocations.slice(0, -1).reverse().map((geolocation, index) => (
                 <TouchableOpacity 
                     key={geolocation.id} 
                     style={index !== 0 && { marginTop: SIZE.small }}
