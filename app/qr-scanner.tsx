@@ -6,7 +6,7 @@ import { Alert, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import { getData } from "../utils/storage";
 import { useDispatch, useSelector } from "../state/store";
-import { addTracker } from "../slices/trackerSlice";
+import { addTracker, fetchTrackersByUserToken } from "../slices/trackerSlice";
 
 interface QrScannerProps {
     navigation: NavigationProp<any>;
@@ -15,7 +15,7 @@ interface QrScannerProps {
 function QrScanner({ navigation } : QrScannerProps) {
     const [permission, requestPermission] = useCameraPermissions();
     const [scannedResult, setScannedResult] = useState<string | null>(null);
-    const access_token = useSelector((state) => state.auth.userData?.access_token );
+    const accessToken = useSelector((state) => state.auth.userData?.access_token );
 
     const dispatch = useDispatch();
     
@@ -25,7 +25,7 @@ function QrScanner({ navigation } : QrScannerProps) {
     }, []);
 
     useEffect(() => {
-        if (scannedResult === null || !access_token) return
+        if (scannedResult === null || !accessToken) return
         Alert.prompt(
             'Enter tracker name',
             'Tracker name',
@@ -33,7 +33,8 @@ function QrScanner({ navigation } : QrScannerProps) {
                 {
                     text: 'Submit',
                     onPress: (trackerName) => {
-                        dispatch(addTracker({ tracker_name: trackerName, access_token: access_token, tracker_token: scannedResult }));
+                        dispatch(addTracker({ tracker_name: trackerName, access_token: accessToken, tracker_token: scannedResult }));
+                        dispatch(fetchTrackersByUserToken({ access_token: accessToken }));
                     }
                 }
             ]
