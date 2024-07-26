@@ -35,7 +35,6 @@ export const fetchTrackersByUserToken = createAsyncThunk<
                 tracker.latest_geolocation = geoResponse.data;
                 return tracker;
             }));
-
             return enrichedTrackers;
         } 
         catch (error) {
@@ -181,28 +180,18 @@ const trackerSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchTrackersByUserToken.pending, (state) => {
-            if (state.trackers.length > 0) {
-                state.loading = false;
-            } 
-            else {
-                state.loading = true;
-            }
+            state.loading = state.trackers.length === 0;
             state.error = null;
         });
         builder.addCase(fetchTrackersByUserToken.fulfilled, (state, action) => {
-            action.payload.forEach(newTracker => {
-                const existingTrackerIndex = state.trackers.findIndex(existingTracker => existingTracker.token === newTracker.token);
-                if (existingTrackerIndex !== -1) {
-                    state.trackers[existingTrackerIndex] = {
-                        ...state.trackers[existingTrackerIndex],
-                        ...action.payload,
-                        geolocations: state.trackers[existingTrackerIndex].geolocations
-                    };
-                } else {
-                    state.trackers.push(newTracker);
-                }
+            const updatedTrackers = action.payload.map(newTracker => {
+                const existingTracker = state.trackers.find(t => t.token === newTracker.token);
+                return existingTracker
+                    ? { ...existingTracker, ...newTracker }
+                    : newTracker;
             });
-            state.loading = false;       
+            state.trackers = updatedTrackers;
+            state.loading = false;
         });
         builder.addCase(fetchTrackersByUserToken.rejected, (state, action) => {
             state.loading = false;
@@ -213,14 +202,13 @@ const trackerSlice = createSlice({
             state.loading = true;
         });
         builder.addCase(addTracker.fulfilled, (state, action) => {
-            const existingTrackerIndex = state.trackers.findIndex(existingTracker => existingTracker.token === action.payload.token);
+            const existingTrackerIndex = state.trackers.findIndex(t => t.token === action.payload.token);
             if (existingTrackerIndex !== -1) {
                 state.trackers[existingTrackerIndex] = action.payload;
             } else {
                 state.trackers.push(action.payload);
             }
-            
-            state.loading = false;   
+            state.loading = false;
         });
         builder.addCase(addTracker.rejected, (state, action) => {
             state.loading = false;
@@ -232,17 +220,14 @@ const trackerSlice = createSlice({
             state.error = null;
         });
         builder.addCase(fetchTrackerGeolocationsByUserToken.fulfilled, (state, action) => {
-            action.payload.forEach(newTracker => {
-                const existingTrackerIndex = state.trackers.findIndex(existingTracker => existingTracker.token === newTracker.token);
-                if (existingTrackerIndex !== -1) {
-                    state.trackers[existingTrackerIndex] = {
-                        ...state.trackers[existingTrackerIndex],
-                        geolocations: newTracker.geolocations,
-                        latest_geolocation: state.trackers[existingTrackerIndex].latest_geolocation 
-                    };
-                }
+            const updatedTrackers = action.payload.map(newTracker => {
+                const existingTracker = state.trackers.find(t => t.token === newTracker.token);
+                return existingTracker
+                    ? { ...existingTracker, geolocations: newTracker.geolocations }
+                    : newTracker;
             });
-            state.loading = false;       
+            state.trackers = updatedTrackers;
+            state.loading = false;
         });
         builder.addCase(fetchTrackerGeolocationsByUserToken.rejected, (state, action) => {
             state.loading = false;
@@ -250,6 +235,7 @@ const trackerSlice = createSlice({
         });
     }
 });
+
 
 export const { resetTrackers, clearError } = trackerSlice.actions;
 export default trackerSlice.reducer;
