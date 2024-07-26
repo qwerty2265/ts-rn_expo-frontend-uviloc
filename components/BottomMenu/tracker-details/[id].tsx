@@ -40,7 +40,7 @@ const TrackerDetails = () => {
         return <CustomActivityIndicator style={{ flex: 1 }} size='small' />
     }
 
-    if (!geolocations) {
+    if (!geolocations || geolocations.length === 1) {
         return (
             <View style={styles.bottomMenuPage}>
                 <CustomText style={{ margin: 'auto' }} color={COLORS.primary} size={SIZE.small}> 
